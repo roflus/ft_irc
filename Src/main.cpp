@@ -1,8 +1,8 @@
-#include <iostream>
+//#include "irc.hpp"
 
+# include <iostream>
 
-
-
+// https://cdn.intra.42.fr/pdf/pdf/83324/en.subject.pdf
 
 int ft_error(std::string string) {
     std::cout << "Error" << std::endl;

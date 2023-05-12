@@ -31,3 +31,8 @@ The channel operator (also referred to as a "chop" or "chanop") on a
     A channel operator is identified by the '@' symbol next to their
     nickname whenever it is associated with a channel (ie replies to the
     NAMES, WHO and WHOIS commands).
+
+
+
+//https://jakash3.wordpress.com/2010/12/31/simple-c-irc-bot-for-linux/
+//https://datatracker.ietf.org/doc/html/rfc1459
