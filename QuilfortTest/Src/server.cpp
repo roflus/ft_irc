@@ -76,71 +76,17 @@ void Server::runServer(){
             stopServer();
             return;
         }
+
         if (fds[0].revents & POLLIN) {
             acceptClient();
         }
-        // Check for activity on the client sockets (incoming data)
-        for (int i = 1; i <= MAX_CLIENTS; ++i) {
+
+        for (int i = 1; i <= MAX_CLIENTS; ++i){
             if (fds[i].fd != -1 && (fds[i].revents & POLLIN)) {
-                int currentSocket = fds[i].fd;
-
-                // Receive data from the client
-                int bytesRead = recv(currentSocket, buffer, BUFFER_SIZE, 0);
-                if (bytesRead <= 0) {
-                    // Client has closed the connection or an error occurred
-                    std::cout << "Client disconnected. Client socket descriptor: " << currentSocket << std::endl;
-                    close(currentSocket);
-                    fds[i].fd = -1; // Mark as unused
-
-                    // Find the client in the vector
-                    std::vector<std::pair<int, std::string> >::iterator it;
-                    for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
-                        if (it->first == currentSocket) {
-                            break;
-                        }
-                    }
-                    if (it != clientSockets.end()) {
-                        clientSockets.erase(it);
-                    }
-
-                    connectedClients--; // Decrement the counter
-
-                    // Check if all clients have disconnected
-                    if (connectedClients == 0) {
-                        close(serverSocket);
-                        return ;
-                    }
-                } else {
-                    std::vector<std::pair<int, std::string> >::iterator it;
-                    for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
-                        if (it->first == currentSocket) {
-                            break;
-                        }
-                    }
-                    if (it != clientSockets.end()) {
-                        if (it->second.empty()) {
-                            // First message from the client is assumed to be the nickname
-                            it->second = buffer;
-                            std::cout << "New nickname set for client " << currentSocket << ": " << it->second << std::endl;
-                            send(clientSocket, "Welcome\n", 8, 0);
-                        } else {
-                            std::string receivedMessage(buffer);
-                            std::string checkCommand = "KICK";
-                            int len = checkCommand.length();
-                            std::string test = receivedMessage.substr(0, len);
-                            std::cout << "Received message from " << it->second << buffer;
-                            if (test == checkCommand) {
-                                const char *message = "You are the ball\n";
-                                send(currentSocket, message, strlen(message), 0);
-                            }
-                        }
-                    }
-                }
+                receiveMessages(i, buffer);
             }
         }
     }
-    close(serverSocket);
-    return;
 }
 
 void Server::acceptClient(){
@@ -165,6 +111,62 @@ void Server::acceptClient(){
             send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
             connectedClients++; // Increment the counter
             break;
+        }
+    }
+}
+
+void Server::receiveMessages(int index, char *buffer){
+    // Check for activity on the client sockets (incoming data)
+    int currentSocket = fds[index].fd;
+    int bytesRead = recv(currentSocket, buffer, BUFFER_SIZE, 0);
+    if (bytesRead <= 0) {
+        // Client has closed the connection or an error occurred
+        std::cout << "Client disconnected. Client socket descriptor: " << currentSocket << std::endl;
+        close(currentSocket);
+        fds[index].fd = -1; // Mark as unused
+
+        // Find the client in the vector
+        std::vector<std::pair<int, std::string> >::iterator it;
+        for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
+            if (it->first == currentSocket) {
+                break;
+            }
+        }
+        if (it != clientSockets.end()) {
+            clientSockets.erase(it);
+        }
+
+        connectedClients--; // Decrement the counter
+
+        // Check if all clients have disconnected
+        if (connectedClients == 0) {
+            close(serverSocket);
+            return ;
+        }
+    } else {
+        std::vector<std::pair<int, std::string> >::iterator it;
+        for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
+            if (it->first == currentSocket) {
+                break;
+            }
+        }
+        if (it != clientSockets.end()) {
+            if (it->second.empty()) {
+                // First message from the client is assumed to be the nickname
+                it->second = buffer;
+                std::cout << "New nickname set for client " << currentSocket << ": " << it->second << std::endl;
+                send(clientSocket, "Welcome\n", 8, 0);
+            } else {
+                std::string receivedMessage(buffer);
+                std::string checkCommand = "KICK";
+                int len = checkCommand.length();
+                std::string test = receivedMessage.substr(0, len);
+                std::cout << "Received message from " << it->second << buffer;
+                if (test == checkCommand) {
+                    const char *message = "You are the ball\n";
+                    send(currentSocket, message, strlen(message), 0);
+                }
+            }
         }
     }
 }

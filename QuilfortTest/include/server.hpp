@@ -26,6 +26,7 @@ class Server {
         // Dit kan nu ook private? Maybe in de toekomst wel nodig in andere files
         void runServer();
         void acceptClient();
+        void receiveMessages(int index, char *buffer);
 
     private: 
        std::vector<std::pair<int, std::string> > clientSockets;
