@@ -1,21 +1,36 @@
-#include "../include/irc.hpp"
+#include "../include/server.hpp"
 
-//const int PORT = 8080;
-//const int MAX_CLIENTS = 10;
-//const int BUFFER_SIZE = 1024;
+Server::Server() : serverSocket(-1) {
+    for (int i = 0; i <= MAX_CLIENTS; ++i) {
+        fds[i].fd = -1;
+    }
+}
 
-int Server::testserver() {
-    std::vector<std::pair<int, std::string> > clientSockets;
-    struct pollfd fds[MAX_CLIENTS + 1]; // Additional 1 for server socket
-    int serverSocket, clientSocket;
+Server::~Server() {
+    if (serverSocket != -1) {
+        close(serverSocket);
+        serverSocket = -1;
+    }
+
+    // Close all client sockets
+    for (int i = 0; i <= MAX_CLIENTS; ++i) {
+        if (fds[i].fd != -1) {
+            close(fds[i].fd);
+            fds[i].fd = -1;
+        }
+    }
+    clientSockets.clear();
+}
+
+void Server::startServer() 
+{
     struct sockaddr_in serverAddress, clientAddress;
-    char buffer[BUFFER_SIZE];
 
     // Create server socket
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket == -1) {
         std::cerr << "Failed to create server socket." << std::endl;
-        return 1;
+        return;
     }
 
     // Set up server address
@@ -27,14 +42,14 @@ int Server::testserver() {
     if (bind(serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) == -1) {
         std::cerr << "Failed to bind server socket." << std::endl;
         close(serverSocket);
-        return 1;
+        return;
     }
 
     // Listen for incoming connections
     if (listen(serverSocket, MAX_CLIENTS) == -1) {
         std::cerr << "Failed to listen for connections." << std::endl;
         close(serverSocket);
-        return 1;
+        return;
     }
 
     std::cout << "Server started. Waiting for connections..." << std::endl;
@@ -43,21 +58,26 @@ int Server::testserver() {
     fds[0].fd = serverSocket;
     fds[0].events = POLLIN;
 
-    // Initialize client sockets in the pollfd array
-    for (int i = 1; i <= MAX_CLIENTS; ++i) {
-        fds[i].fd = -1; // Mark as unused
-    }
+    // FUNCTION FOR RUNNING SERVER
+    runServer();
+}
 
+void Server::runServer(){
+
+    int clientSocket;
+    char buffer[BUFFER_SIZE];
+    struct sockaddr_in clientAddress;
     int connectedClients = 0; // Counter for connected clients
 
+
     while (true) {
+        memset(buffer, 0, sizeof(buffer));
         // Use poll to wait for activity on any of the connected sockets
         if (poll(fds, MAX_CLIENTS + 1, -1) == -1) {
             std::cerr << "Failed to poll." << std::endl;
             close(serverSocket);
-            return 1;
+            return;
         }
-
         // Check for activity on the server socket (new connection request)
         if (fds[0].revents & POLLIN) {
             socklen_t clientAddressSize = sizeof(clientAddress);
@@ -67,7 +87,7 @@ int Server::testserver() {
             if (clientSocket == -1) {
                 std::cerr << "Failed to accept client connection." << std::endl;
                 close(serverSocket);
-                return 1;
+                return ;
             }
             std::cout << "New client connected. Client socket descriptor: " << clientSocket << std::endl;
 
@@ -84,7 +104,6 @@ int Server::testserver() {
                 }
             }
         }
-
         // Check for activity on the client sockets (incoming data)
         for (int i = 1; i <= MAX_CLIENTS; ++i) {
             if (fds[i].fd != -1 && (fds[i].revents & POLLIN)) {
@@ -114,7 +133,7 @@ int Server::testserver() {
                     // Check if all clients have disconnected
                     if (connectedClients == 0) {
                         close(serverSocket);
-                        return 0;
+                        return ;
                     }
                 } else {
                     std::vector<std::pair<int, std::string> >::iterator it;
@@ -138,8 +157,6 @@ int Server::testserver() {
                             if (test == checkCommand) {
                                 const char *message = "You are the ball\n";
                                 send(currentSocket, message, strlen(message), 0);
-                            } else {
-                                send(currentSocket, buffer, bytesRead, 0);
                             }
                         }
                     }
@@ -147,7 +164,6 @@ int Server::testserver() {
             }
         }
     }
-
     close(serverSocket);
-    return 0;
+    return;
 }

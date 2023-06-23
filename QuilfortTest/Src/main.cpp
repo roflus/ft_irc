@@ -1,10 +1,10 @@
-#include "../include/irc.hpp"
+#include "../include/server.hpp"
 
 int main(int argc, char *argv[])
 {
     
     Server irc;
     
-    irc.testserver();
+    irc.startServer();
     return 0;
 }

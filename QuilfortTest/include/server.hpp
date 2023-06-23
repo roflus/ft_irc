@@ -1,5 +1,5 @@
-#ifndef IRC_HPP
-# define IRC_HPP
+#ifndef SERVER_HPP
+# define SERVER_HPP
 
 # include <iostream>
 # include <cstring>
@@ -17,11 +17,19 @@
 
 class Server {
 
-    private:
-
-
     public:
-        int testserver();
+        Server();
+        ~Server();
+
+        void startServer();
+        void runServer();
+
+    private:
+       
+       std::vector<std::pair<int, std::string> > clientSockets;
+       struct pollfd fds[MAX_CLIENTS + 1];
+       int serverSocket;
+
 
 
 
