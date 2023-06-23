@@ -1,10 +1,10 @@
 #include "../include/irc.hpp"
 
-const int PORT = 8080;
-const int MAX_CLIENTS = 10;
-const int BUFFER_SIZE = 1024;
+//const int PORT = 8080;
+//const int MAX_CLIENTS = 10;
+//const int BUFFER_SIZE = 1024;
 
-int testserver() {
+int Server::testserver() {
     std::vector<std::pair<int, std::string> > clientSockets;
     struct pollfd fds[MAX_CLIENTS + 1]; // Additional 1 for server socket
     int serverSocket, clientSocket;
@@ -128,7 +128,7 @@ int testserver() {
                             // First message from the client is assumed to be the nickname
                             it->second = buffer;
                             std::cout << "New nickname set for client " << currentSocket << ": " << it->second << std::endl;
-                            send(clientSocket, "Welcome\n", 7, 0);
+                            send(clientSocket, "Welcome\n", 8, 0);
                         } else {
                             std::string receivedMessage(buffer);
                             std::string checkCommand = "KICK";

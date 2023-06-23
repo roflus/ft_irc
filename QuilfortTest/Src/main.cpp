@@ -2,6 +2,9 @@
 
 int main(int argc, char *argv[])
 {
-    testserver();
+    
+    Server irc;
+    
+    irc.testserver();
     return 0;
 }

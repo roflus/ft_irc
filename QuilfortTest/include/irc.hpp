@@ -11,19 +11,22 @@
 # include <vector>
 # include <poll.h>
 
-
+# define PORT           8080
+# define MAX_CLIENTS    10
+# define BUFFER_SIZE     1024
 
 class Server {
 
     private:
 
 
-    public: 
+    public:
+        int testserver();
 
 
 
 };
 
-int testserver() ;
+
 
 #endif
