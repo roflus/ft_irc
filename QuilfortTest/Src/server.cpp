@@ -1,6 +1,6 @@
 #include "../include/server.hpp"
 
-Server::Server() : serverSocket(-1) {
+Server::Server() : serverSocket(-1), connectedClients(0) {
     // Init sockets in de poll array
     for (int i = 0; i <= MAX_CLIENTS; ++i) {
         fds[i].fd = -1;
@@ -64,6 +64,7 @@ void Server::startServer() {
 
     // FUNCTION FOR RUNNING SERVER
     runServer();
+    return;
 }
 
 void Server::runServer(){
@@ -87,13 +88,13 @@ void Server::runServer(){
             }
         }
     }
+    stopServer();
+    return ;
 }
 
 void Server::acceptClient(){
     struct sockaddr_in clientAddress;
     socklen_t clientAddressSize = sizeof(clientAddress);
-    connectedClients = 0; // Counter for connected clients
-
     clientSocket = accept(serverSocket, (struct sockaddr *)&clientAddress, &clientAddressSize);
     if (clientSocket == -1) {
         std::cerr << "Failed to accept client connection." << std::endl;
@@ -109,9 +110,34 @@ void Server::acceptClient(){
             clientSockets.push_back(std::make_pair(clientSocket, ""));
             const char *welcomeMessage = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
             send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
-            connectedClients++; // Increment the counter
+            connectedClients++;
             break;
         }
+    }
+}
+
+void Server::disconnectClient(int index){
+    int currentSocket = fds[index].fd;
+    // Client has closed the connection or an error occurred
+    std::cout << "Client disconnected. Client socket descriptor: " << currentSocket << std::endl;
+    close(currentSocket);
+    fds[index].fd = -1; // Mark as unused
+    // Find the client in the vector
+    std::vector<std::pair<int, std::string> >::iterator it;
+    for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
+        if (it->first == currentSocket) {
+            break;
+        }
+    }
+    if (it != clientSockets.end()) {
+        clientSockets.erase(it);
+    }
+    connectedClients--;
+    std::cout << "connectedClients: " << connectedClients << std::endl;
+
+    if (connectedClients == 0) {
+        stopServer();
+        exit (0);
     }
 }
 
@@ -120,29 +146,7 @@ void Server::receiveMessages(int index, char *buffer){
     int currentSocket = fds[index].fd;
     int bytesRead = recv(currentSocket, buffer, BUFFER_SIZE, 0);
     if (bytesRead <= 0) {
-        // Client has closed the connection or an error occurred
-        std::cout << "Client disconnected. Client socket descriptor: " << currentSocket << std::endl;
-        close(currentSocket);
-        fds[index].fd = -1; // Mark as unused
-
-        // Find the client in the vector
-        std::vector<std::pair<int, std::string> >::iterator it;
-        for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
-            if (it->first == currentSocket) {
-                break;
-            }
-        }
-        if (it != clientSockets.end()) {
-            clientSockets.erase(it);
-        }
-
-        connectedClients--; // Decrement the counter
-
-        // Check if all clients have disconnected
-        if (connectedClients == 0) {
-            close(serverSocket);
-            return ;
-        }
+        disconnectClient(index);
     } else {
         std::vector<std::pair<int, std::string> >::iterator it;
         for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
@@ -154,7 +158,7 @@ void Server::receiveMessages(int index, char *buffer){
             if (it->second.empty()) {
                 // First message from the client is assumed to be the nickname
                 it->second = buffer;
-                std::cout << "New nickname set for client " << currentSocket << ": " << it->second << std::endl;
+                //std::cout << "New nickname set for client " << currentSocket << ": " << it->second << std::endl;
                 send(clientSocket, "Welcome\n", 8, 0);
             } else {
                 std::string receivedMessage(buffer);

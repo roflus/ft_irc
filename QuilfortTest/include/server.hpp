@@ -27,6 +27,7 @@ class Server {
         void runServer();
         void acceptClient();
         void receiveMessages(int index, char *buffer);
+        void disconnectClient(int index);
 
     private: 
        std::vector<std::pair<int, std::string> > clientSockets;
