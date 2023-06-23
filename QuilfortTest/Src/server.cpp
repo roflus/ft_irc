@@ -1,12 +1,17 @@
 #include "../include/server.hpp"
 
 Server::Server() : serverSocket(-1) {
+    // Init sockets in de poll array
     for (int i = 0; i <= MAX_CLIENTS; ++i) {
         fds[i].fd = -1;
     }
 }
 
 Server::~Server() {
+    stopServer();
+}
+
+void Server::stopServer() {
     if (serverSocket != -1) {
         close(serverSocket);
         serverSocket = -1;
@@ -22,8 +27,7 @@ Server::~Server() {
     clientSockets.clear();
 }
 
-void Server::startServer() 
-{
+void Server::startServer() {
     struct sockaddr_in serverAddress, clientAddress;
 
     // Create server socket
@@ -63,46 +67,17 @@ void Server::startServer()
 }
 
 void Server::runServer(){
-
-    int clientSocket;
     char buffer[BUFFER_SIZE];
-    struct sockaddr_in clientAddress;
-    int connectedClients = 0; // Counter for connected clients
-
-
     while (true) {
         memset(buffer, 0, sizeof(buffer));
         // Use poll to wait for activity on any of the connected sockets
         if (poll(fds, MAX_CLIENTS + 1, -1) == -1) {
             std::cerr << "Failed to poll." << std::endl;
-            close(serverSocket);
+            stopServer();
             return;
         }
-        // Check for activity on the server socket (new connection request)
         if (fds[0].revents & POLLIN) {
-            socklen_t clientAddressSize = sizeof(clientAddress);
-
-            // Accept the new client connection
-            clientSocket = accept(serverSocket, (struct sockaddr *)&clientAddress, &clientAddressSize);
-            if (clientSocket == -1) {
-                std::cerr << "Failed to accept client connection." << std::endl;
-                close(serverSocket);
-                return ;
-            }
-            std::cout << "New client connected. Client socket descriptor: " << clientSocket << std::endl;
-
-            // Add the new client socket to the pollfd array
-            for (int i = 1; i <= MAX_CLIENTS; ++i) {
-                if (fds[i].fd == -1) {
-                    fds[i].fd = clientSocket;
-                    fds[i].events = POLLIN;
-                    clientSockets.push_back(std::make_pair(clientSocket, ""));
-                    const char *welcomeMessage = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
-                    send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
-                    connectedClients++; // Increment the counter
-                    break;
-                }
-            }
+            acceptClient();
         }
         // Check for activity on the client sockets (incoming data)
         for (int i = 1; i <= MAX_CLIENTS; ++i) {
@@ -166,4 +141,30 @@ void Server::runServer(){
     }
     close(serverSocket);
     return;
+}
+
+void Server::acceptClient(){
+    struct sockaddr_in clientAddress;
+    socklen_t clientAddressSize = sizeof(clientAddress);
+    connectedClients = 0; // Counter for connected clients
+
+    clientSocket = accept(serverSocket, (struct sockaddr *)&clientAddress, &clientAddressSize);
+    if (clientSocket == -1) {
+        std::cerr << "Failed to accept client connection." << std::endl;
+        stopServer();
+        return ;
+    }
+
+    // Add the new client socket to the pollfd array
+    for (int i = 1; i <= MAX_CLIENTS; ++i) {
+        if (fds[i].fd == -1) {
+            fds[i].fd = clientSocket;
+            fds[i].events = POLLIN;
+            clientSockets.push_back(std::make_pair(clientSocket, ""));
+            const char *welcomeMessage = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
+            send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
+            connectedClients++; // Increment the counter
+            break;
+        }
+    }
 }

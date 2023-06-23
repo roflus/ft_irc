@@ -22,13 +22,17 @@ class Server {
         ~Server();
 
         void startServer();
+        void stopServer();
+        // Dit kan nu ook private? Maybe in de toekomst wel nodig in andere files
         void runServer();
+        void acceptClient();
 
-    private:
-       
+    private: 
        std::vector<std::pair<int, std::string> > clientSockets;
        struct pollfd fds[MAX_CLIENTS + 1];
        int serverSocket;
+       int connectedClients;
+       int clientSocket;
 
 
 
