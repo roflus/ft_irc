@@ -48,6 +48,8 @@ int testserver() {
         fds[i].fd = -1; // Mark as unused
     }
 
+    int connectedClients = 0; // Counter for connected clients
+
     while (true) {
         // Use poll to wait for activity on any of the connected sockets
         if (poll(fds, MAX_CLIENTS + 1, -1) == -1) {
@@ -75,6 +77,9 @@ int testserver() {
                     fds[i].fd = clientSocket;
                     fds[i].events = POLLIN;
                     clientSockets.push_back(std::make_pair(clientSocket, ""));
+                    const char *welcomeMessage = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
+                    send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
+                    connectedClients++; // Increment the counter
                     break;
                 }
             }
@@ -103,6 +108,14 @@ int testserver() {
                     if (it != clientSockets.end()) {
                         clientSockets.erase(it);
                     }
+
+                    connectedClients--; // Decrement the counter
+
+                    // Check if all clients have disconnected
+                    if (connectedClients == 0) {
+                        close(serverSocket);
+                        return 0;
+                    }
                 } else {
                     std::vector<std::pair<int, std::string> >::iterator it;
                     for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
@@ -115,12 +128,13 @@ int testserver() {
                             // First message from the client is assumed to be the nickname
                             it->second = buffer;
                             std::cout << "New nickname set for client " << currentSocket << ": " << it->second << std::endl;
+                            send(clientSocket, "Welcome\n", 7, 0);
                         } else {
                             std::string receivedMessage(buffer);
                             std::string checkCommand = "KICK";
                             int len = checkCommand.length();
                             std::string test = receivedMessage.substr(0, len);
-                            std::cout << "Received message from " << it->second << ": " << buffer << std::endl;
+                            std::cout << "Received message from " << it->second << buffer;
                             if (test == checkCommand) {
                                 const char *message = "You are the ball\n";
                                 send(currentSocket, message, strlen(message), 0);

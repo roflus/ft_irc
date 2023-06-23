@@ -11,6 +11,19 @@
 # include <vector>
 # include <poll.h>
 
+
+
+class Server {
+
+    private:
+
+
+    public: 
+
+
+
+};
+
 int testserver() ;
 
 #endif
