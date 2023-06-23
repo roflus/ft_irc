@@ -108,8 +108,10 @@ void Server::acceptClient(){
             fds[i].fd = clientSocket;
             fds[i].events = POLLIN;
             clientSockets.push_back(std::make_pair(clientSocket, ""));
-            const char *welcomeMessage = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
-            send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
+            //const char *welcomeMessage = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
+            //send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
+            sendWelcomeMessage();
+
             connectedClients++;
             break;
         }
@@ -137,6 +139,7 @@ void Server::disconnectClient(int index){
 
     if (connectedClients == 0) {
         stopServer();
+        // Iets anders voor vinden, maar ik had geen zin meer in dit
         exit (0);
     }
 }
@@ -161,15 +164,8 @@ void Server::receiveMessages(int index, char *buffer){
                 //std::cout << "New nickname set for client " << currentSocket << ": " << it->second << std::endl;
                 send(clientSocket, "Welcome\n", 8, 0);
             } else {
-                std::string receivedMessage(buffer);
-                std::string checkCommand = "KICK";
-                int len = checkCommand.length();
-                std::string test = receivedMessage.substr(0, len);
-                std::cout << "Received message from " << it->second << buffer;
-                if (test == checkCommand) {
-                    const char *message = "You are the ball\n";
-                    send(currentSocket, message, strlen(message), 0);
-                }
+                std::cout << "Received message from " << it->second << buffer << std::endl;
+                checkCommands(currentSocket, buffer);
             }
         }
     }

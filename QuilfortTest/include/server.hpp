@@ -29,18 +29,16 @@ class Server {
         void receiveMessages(int index, char *buffer);
         void disconnectClient(int index);
 
+        void sendWelcomeMessage();
+        void checkCommands(int currentSocket, char *buffer);
+
     private: 
-       std::vector<std::pair<int, std::string> > clientSockets;
-       struct pollfd fds[MAX_CLIENTS + 1];
-       int serverSocket;
-       int connectedClients;
-       int clientSocket;
+        std::vector<std::pair<int, std::string> > clientSockets;
+        struct pollfd fds[MAX_CLIENTS + 1];
+        int serverSocket;
+        int connectedClients;
+        int clientSocket;
 
-
-
-
+        const char *message;
 };
-
-
-
 #endif
