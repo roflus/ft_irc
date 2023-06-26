@@ -10,15 +10,16 @@
 # include <thread>
 # include <vector>
 # include <poll.h>
+# include <map>
+# include "../Src/Commands/Commands.hpp"
 
-# define PORT           8080
 # define MAX_CLIENTS    10
 # define BUFFER_SIZE     1024
 
 class Server {
 
     public:
-        Server();
+        Server(const std::string &port, const std::string &password);
         ~Server();
 
         void startServer();
@@ -30,15 +31,15 @@ class Server {
         void disconnectClient(int index);
 
         void sendWelcomeMessage();
-        void checkCommands(int currentSocket, char *buffer);
-
-    private: 
-        std::vector<std::pair<int, std::string> > clientSockets;
+    private:
+        // std::vector<std::pair<int, std::string> > clientSockets;
+        std::map<int, std::string> clientSockets;
         struct pollfd fds[MAX_CLIENTS + 1];
         int serverSocket;
         int connectedClients;
         int clientSocket;
-
+        const in_port_t _port;
+        std::string _password;
         const char *message;
 };
 #endif

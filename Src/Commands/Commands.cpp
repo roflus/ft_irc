@@ -1,31 +1,35 @@
-#include "../include/server.hpp"
+#include "../Src/Commands/Commands.hpp"
 
-void Server::sendWelcomeMessage() {
-    const char* message = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
-    send(clientSocket, message, strlen(message), 0);
+Commands::Commands(/* args */)
+{
 }
 
-void  Server::checkCommands(int currentSocket, char *buffer) {
+Commands::~Commands()
+{
+}
+
+
+void  Commands::checkCommands(int currentSocket, char *buffer) {
     
     // Deze functie moet compleet anders, Het was puur om even te kijken
     // Of ik het in een loop kon doen,
     // ook al heeft de Harl mij wel geinspireerd
-    
+    const char *message;
     std::string receivedMessage(buffer);
     std::string test;
     int len = 0;
-    std::string	commandArray[] = {
+    std::string	operatorCommands[] = {
 		"KICK",
 		"INVITE", 
 		"TOPIC",
 		"MODE"
 	};
-    
+
     for (int i = 0; i < 4; i++)
     {
-        len = commandArray[i].length();
+        len = operatorCommands[i].length();
         test = receivedMessage.substr(0, len);
-        if (test == commandArray[i]) {
+        if (test == operatorCommands[i]) {
             message = "THIS IS A FUTURE COMMAND\n";
             send(currentSocket, message, strlen(message), 0);
         }

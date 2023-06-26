@@ -1,7 +1,10 @@
 NAME = ircserv
 FLAGS = -Wall -Wextra -Werror -std=c++98
 HEADER = -I ./include
-SRC = ./Src/main.cpp
+SRC = 	./Src/Main.cpp \
+		./Src/Server.cpp \
+		./Src/Commands/Commands.cpp \
+
 OBJ = $(SRC:%.cpp=%.o)
 
 all: $(NAME)
@@ -9,7 +12,7 @@ $(NAME): $(OBJ)
 	c++ $(OBJ) -o $(NAME)
 
 %.o: %.cpp %.hpp
-	c++ $(FLAGS) $(HEADER) -c $< -o $@
+	c++ $(HEADER) -c $< -o $@
 
 clean:
 	rm -rf $(OBJ)

@@ -1,7 +1,10 @@
-#include "../include/server.hpp"
+#include "../include/Server.hpp"
 
-Server::Server() : serverSocket(-1), connectedClients(0) {
+Server::Server(const std::string &port, const std::string &password) : 
+    serverSocket(-1), connectedClients(0),
+    _port(atoi(port.c_str())) {
     // Init sockets in de poll array
+    _password = password;
     for (int i = 0; i <= MAX_CLIENTS; ++i) {
         fds[i].fd = -1;
     }
@@ -40,7 +43,7 @@ void Server::startServer() {
     // Set up server address
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = INADDR_ANY;
-    serverAddress.sin_port = htons(PORT); // Replace PORT with your desired port number
+    serverAddress.sin_port = htons(_port); // Replace PORT with your desired port number
 
     // Bind server socket to the specified address and port
     if (bind(serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) == -1) {
@@ -56,7 +59,7 @@ void Server::startServer() {
         return;
     }
 
-    std::cout << "Server started. Waiting for connections..." << std::endl;
+    std::cout << "Server started with port number: " << _port << "Waiting for connections..." << std::endl;
 
     // Add server socket to the pollfd array
     fds[0].fd = serverSocket;
@@ -92,6 +95,11 @@ void Server::runServer(){
     return ;
 }
 
+void Server::sendWelcomeMessage() {
+    message = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
+    send(clientSocket, message, strlen(message), 0);
+}
+
 void Server::acceptClient(){
     struct sockaddr_in clientAddress;
     socklen_t clientAddressSize = sizeof(clientAddress);
@@ -107,7 +115,7 @@ void Server::acceptClient(){
         if (fds[i].fd == -1) {
             fds[i].fd = clientSocket;
             fds[i].events = POLLIN;
-            clientSockets.push_back(std::make_pair(clientSocket, ""));
+            clientSockets.insert(std::make_pair(clientSocket, ""));
             //const char *welcomeMessage = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
             //send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
             sendWelcomeMessage();
@@ -125,7 +133,7 @@ void Server::disconnectClient(int index){
     close(currentSocket);
     fds[index].fd = -1; // Mark as unused
     // Find the client in the vector
-    std::vector<std::pair<int, std::string> >::iterator it;
+    std::map<int, std::string>::iterator it;
     for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
         if (it->first == currentSocket) {
             break;
@@ -146,12 +154,13 @@ void Server::disconnectClient(int index){
 
 void Server::receiveMessages(int index, char *buffer){
     // Check for activity on the client sockets (incoming data)
+    Commands command;
     int currentSocket = fds[index].fd;
     int bytesRead = recv(currentSocket, buffer, BUFFER_SIZE, 0);
     if (bytesRead <= 0) {
         disconnectClient(index);
     } else {
-        std::vector<std::pair<int, std::string> >::iterator it;
+        std::map<int, std::string>::iterator it;
         for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
             if (it->first == currentSocket) {
                 break;
@@ -165,7 +174,7 @@ void Server::receiveMessages(int index, char *buffer){
                 send(clientSocket, "Welcome\n", 8, 0);
             } else {
                 std::cout << "Received message from " << it->second << buffer << std::endl;
-                checkCommands(currentSocket, buffer);
+                command.checkCommands(currentSocket, buffer);
             }
         }
     }
