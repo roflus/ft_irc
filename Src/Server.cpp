@@ -76,8 +76,7 @@ void Server::runServer(){
         if (_pollfds[0].revents & POLLIN) {
             acceptClient();
         }
-        std::cout << "ko hier" << std::endl;
-        for (int i = 1; i <= MAX_CLIENTS; ++i){
+        for (int i = 1; i <= connectedClients; ++i){
             if (_pollfds[i].fd != -1 && (_pollfds[i].revents & POLLIN)) {
                 receiveMessages(i, buffer);
             std::cout << "kom je hier" << std::endl;
@@ -94,26 +93,22 @@ void Server::sendWelcomeMessage() {
 }
 
 void Server::acceptClient(){
+    /* hier een nieuwe Client class aanmaken de socket naar accept zetten en dan in die map zetten */
+
     struct sockaddr_in clientAddress;
     socklen_t clientAddressSize = sizeof(clientAddress);
     clientSocket = accept(_serverSocket, (struct sockaddr *)&clientAddress, &clientAddressSize);
     if (clientSocket == -1)
         throw ServerException("Failed to listen server socket");
 
-    // Add the new client socket to the pollfd array
-    for (int i = 1; i <= MAX_CLIENTS; ++i) {
-        if (_pollfds[i].fd == -1) {
-            _pollfds[i].fd = clientSocket;
-            _pollfds[i].events = POLLIN;
-            clientSockets.insert(std::make_pair(clientSocket, ""));
-            //const char *welcomeMessage = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
-            //send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
-            sendWelcomeMessage();
-
-            connectedClients++;
-            break;
-        }
-    }
+    pollfd clientPollfd;
+    clientPollfd.fd = clientSocket;
+    clientPollfd.events = POLLIN;
+    _pollfds.push_back(clientPollfd);
+    connectedClients++;
+    // comment hieboven inplaats van dit
+    clientSockets.insert(std::make_pair(clientSocket, ""));
+    sendWelcomeMessage();
 }
 
 void Server::disconnectClient(int index){
@@ -121,7 +116,7 @@ void Server::disconnectClient(int index){
     // Client has closed the connection or an error occurred
     std::cout << "Client disconnected. Client socket descriptor: " << currentSocket << std::endl;
     close(currentSocket);
-    _pollfds[index].fd = -1; // Mark as unused
+    // _pollfds[index].fd = -1; // Mark as unused
     // Find the client in the vector
     std::map<int, std::string>::iterator it;
     for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
