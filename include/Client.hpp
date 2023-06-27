@@ -1,20 +1,18 @@
 #include <iostream>
 #include <map>
 
-class User
+class Client
 {
 private:
     std::string _username;
     std::string _nickname;
     std::string _password;
-    std::map<std::string, User> users;
+
+    bool        _isRegistered;
 
 public:
-    User(/* args */);
-    ~User();
-
-
-    void registerUser(const std::string &username, const std::string &password, const std::string &nickname);
+    Client(/* args */);
+    ~Client();
 
     std::string getUsername();
     std::string getPassword();

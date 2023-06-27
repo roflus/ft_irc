@@ -1,13 +1,13 @@
 #include "../include/Server.hpp"
 
 Server::Server(const std::string &port, const std::string &password) : 
-    serverSocket(-1), connectedClients(0),
-    _port(atoi(port.c_str())) {
-    // Init sockets in de poll array
-    _password = password;
-    for (int i = 0; i <= MAX_CLIENTS; ++i) {
-        fds[i].fd = -1;
-    }
+    _serverSocket(-1), connectedClients(0),
+    _port(atoi(port.c_str())), _password(password) {
+
+    /* Bind listen dus server opstarten kan hier?
+    Maaaar..... dan moeten we dus namespace doen, kan wel ? wat denk jij? is wel BigBrain 
+    voor nu is het nog hetzelfde als eerst */
+
 }
 
 Server::~Server() {
@@ -15,16 +15,16 @@ Server::~Server() {
 }
 
 void Server::stopServer() {
-    if (serverSocket != -1) {
-        close(serverSocket);
-        serverSocket = -1;
+    if (_serverSocket != -1) {
+        close(_serverSocket);
+        _serverSocket = -1;
     }
 
     // Close all client sockets
     for (int i = 0; i <= MAX_CLIENTS; ++i) {
-        if (fds[i].fd != -1) {
-            close(fds[i].fd);
-            fds[i].fd = -1;
+        if (_pollfds[i].fd != -1) {
+            close(_pollfds[i].fd);
+            _pollfds[i].fd = -1;
         }
     }
     clientSockets.clear();
@@ -33,38 +33,31 @@ void Server::stopServer() {
 void Server::startServer() {
     struct sockaddr_in serverAddress, clientAddress;
 
-    // Create server socket
-    serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (serverSocket == -1) {
-        std::cerr << "Failed to create server socket." << std::endl;
-        return;
-    }
+    /* Create serversocket en throw exception en dan in de main opvangen met try en chatch want */
+    _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (_serverSocket == -1)
+        throw ServerException("Failed to create server socket");
 
     // Set up server address
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = INADDR_ANY;
-    serverAddress.sin_port = htons(_port); // Replace PORT with your desired port number
+    serverAddress.sin_port = htons(_port);
 
     // Bind server socket to the specified address and port
-    if (bind(serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) == -1) {
-        std::cerr << "Failed to bind server socket." << std::endl;
-        close(serverSocket);
-        return;
-    }
+    if (bind(_serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) == -1)
+        throw ServerException("Failed to bind server socket");
 
     // Listen for incoming connections
-    if (listen(serverSocket, MAX_CLIENTS) == -1) {
-        std::cerr << "Failed to listen for connections." << std::endl;
-        close(serverSocket);
-        return;
-    }
+    if (listen(_serverSocket, 1) == -1)
+        throw ServerException("Failed to listen server socket");
 
     std::cout << "Server started with port number: " << _port << "Waiting for connections..." << std::endl;
 
-    // Add server socket to the pollfd array
-    fds[0].fd = serverSocket;
-    fds[0].events = POLLIN;
-
+    // Add server socket to the pollfd vector
+    pollfd serverPollfd;
+    serverPollfd.fd = _serverSocket;
+    serverPollfd.events = POLLIN;
+    _pollfds.push_back(serverPollfd);
     // FUNCTION FOR RUNNING SERVER
     runServer();
     return;
@@ -72,22 +65,22 @@ void Server::startServer() {
 
 void Server::runServer(){
     char buffer[BUFFER_SIZE];
+
+
     while (true) {
         memset(buffer, 0, sizeof(buffer));
         // Use poll to wait for activity on any of the connected sockets
-        if (poll(fds, MAX_CLIENTS + 1, -1) == -1) {
-            std::cerr << "Failed to poll." << std::endl;
-            stopServer();
-            return;
-        }
+        if (poll(_pollfds.data(), MAX_CLIENTS + 1, -1) == -1)
+            throw ServerException("Failed to listen server socket");
 
-        if (fds[0].revents & POLLIN) {
+        if (_pollfds[0].revents & POLLIN) {
             acceptClient();
         }
-
+        std::cout << "ko hier" << std::endl;
         for (int i = 1; i <= MAX_CLIENTS; ++i){
-            if (fds[i].fd != -1 && (fds[i].revents & POLLIN)) {
+            if (_pollfds[i].fd != -1 && (_pollfds[i].revents & POLLIN)) {
                 receiveMessages(i, buffer);
+            std::cout << "kom je hier" << std::endl;
             }
         }
     }
@@ -103,18 +96,15 @@ void Server::sendWelcomeMessage() {
 void Server::acceptClient(){
     struct sockaddr_in clientAddress;
     socklen_t clientAddressSize = sizeof(clientAddress);
-    clientSocket = accept(serverSocket, (struct sockaddr *)&clientAddress, &clientAddressSize);
-    if (clientSocket == -1) {
-        std::cerr << "Failed to accept client connection." << std::endl;
-        stopServer();
-        return ;
-    }
+    clientSocket = accept(_serverSocket, (struct sockaddr *)&clientAddress, &clientAddressSize);
+    if (clientSocket == -1)
+        throw ServerException("Failed to listen server socket");
 
     // Add the new client socket to the pollfd array
     for (int i = 1; i <= MAX_CLIENTS; ++i) {
-        if (fds[i].fd == -1) {
-            fds[i].fd = clientSocket;
-            fds[i].events = POLLIN;
+        if (_pollfds[i].fd == -1) {
+            _pollfds[i].fd = clientSocket;
+            _pollfds[i].events = POLLIN;
             clientSockets.insert(std::make_pair(clientSocket, ""));
             //const char *welcomeMessage = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
             //send(clientSocket, welcomeMessage, strlen(welcomeMessage), 0);
@@ -127,11 +117,11 @@ void Server::acceptClient(){
 }
 
 void Server::disconnectClient(int index){
-    int currentSocket = fds[index].fd;
+    int currentSocket = _pollfds[index].fd;
     // Client has closed the connection or an error occurred
     std::cout << "Client disconnected. Client socket descriptor: " << currentSocket << std::endl;
     close(currentSocket);
-    fds[index].fd = -1; // Mark as unused
+    _pollfds[index].fd = -1; // Mark as unused
     // Find the client in the vector
     std::map<int, std::string>::iterator it;
     for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
@@ -155,7 +145,7 @@ void Server::disconnectClient(int index){
 void Server::receiveMessages(int index, char *buffer){
     // Check for activity on the client sockets (incoming data)
     Commands command;
-    int currentSocket = fds[index].fd;
+    int currentSocket = _pollfds[index].fd;
     int bytesRead = recv(currentSocket, buffer, BUFFER_SIZE, 0);
     if (bytesRead <= 0) {
         disconnectClient(index);

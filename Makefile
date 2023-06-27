@@ -4,6 +4,8 @@ HEADER = -I ./include
 SRC = 	./Src/Main.cpp \
 		./Src/Server.cpp \
 		./Src/Commands/Commands.cpp \
+		./Src/Client.cpp \
+		./Src/Channel.cpp
 
 OBJ = $(SRC:%.cpp=%.o)
 
