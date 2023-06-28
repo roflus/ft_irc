@@ -27,6 +27,10 @@ void  CheckCommands::findCommand(Client &client)
 {
         std::string receivedMessage = client.getBuffer();
         std::string check = receivedMessage.substr(0, receivedMessage.find(' '));
+
+        // std::string check = client.getArguments().front();
+        // client.getArguments().pop();
+        // std::cout << "jaargumentsja" << client.getArguments().front() << std::endl;
         std::map<std::string, Commands*>::iterator iter = _commands.find(check);
         if (iter != _commands.end())
             executeCommand(client, check);

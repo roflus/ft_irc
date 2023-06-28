@@ -21,6 +21,7 @@ std::string Client::getNickname() { return this->_nickname; }
 std::string Client::getBuffer() {return this->_buffer; }
 int         Client::getSocket() { return this->_clientSocket; }
 sockaddr_in *Client::getSockaddr() { return &_address; }
+std::queue<std::string> Client::getArguments() {return this->_arguments;}
 
 /*Setters*/
 void        Client::setUsername(const std::string &username) { this->_username = username; }
@@ -41,5 +42,14 @@ bool        Client::HandleBuffer() {
         return false;
     buffer[bytesRead] = '\0';
     this->_buffer += buffer;
+    parseBuffer();
     return true;
+}
+
+void    Client::parseBuffer() {
+    std::stringstream ss(getBuffer());
+    std::string argument;
+
+    while (ss >> argument)
+        _arguments.push(argument);
 }

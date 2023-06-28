@@ -4,6 +4,8 @@
 # include <iostream>
 # include <map>
 # include <netinet/in.h>
+# include <queue>
+# include <sstream>
 
 # define BUFFER_SIZE    1024
 
@@ -20,6 +22,8 @@ private:
     int         _clientSocket;
     bool        _isRegistered;
 
+    std::queue<std::string> _arguments;
+
 public:
     Client();
     ~Client();
@@ -31,6 +35,7 @@ public:
     std::string getBuffer();
     sockaddr_in *getSockaddr();
     int         getSocket();
+    std::queue<std::string> getArguments();
 
 
     /* Setter methods */
@@ -42,6 +47,7 @@ public:
 
 
     bool        HandleBuffer();
+    void        parseBuffer();
 
     // PUUR FOR TESTING
     const char *message;

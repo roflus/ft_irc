@@ -10,7 +10,11 @@ Nick::~Nick()
 
 void  Nick::execute(Client &client)
 {
-    std::cout << "HELLO NOW Invite" << std::endl;
-    client.message = "WHO DO YOU WANT TO INVITE\n";
-    send(client.getSocket(), client.message, strlen(client.message), 0);
+    
+    // std::string nickname = client.getArguments().front();
+    // client.getArguments().pop();
+    // client.setNickname(nickname);
+    // std::cout << "HELLO NOW Invite" << std::endl;
+    // std::string message = "Nickname is set to " + nickname;
+    // send(client.getSocket(), message.c_str(), message.size(), 0);
 } 
