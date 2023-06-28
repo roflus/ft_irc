@@ -51,7 +51,7 @@ void Server::startServer() {
     if (listen(_serverSocket, 1) == -1)
         throw ServerException("Failed to listen server socket");
 
-    std::cout << "Server started with port number: " << _port << "Waiting for connections..." << std::endl;
+    std::cout << "Server started with port number: " << _port << ". Waiting for connections..." << std::endl;
 
     // Add server socket to the pollfd vector
     pollfd serverPollfd;
