@@ -1,11 +1,11 @@
 NAME = ircserv
 FLAGS = -Wall -Wextra -Werror -std=c++98
 HEADER = -I ./include
-SRC = 	./Src/main.cpp \
-		./Src/Server.cpp \
+SRC = 	./Src/Main.cpp \
+		./Src/Server/Server.cpp \
 		./Src/Commands/Commands.cpp \
-		./Src/Client.cpp \
-		./Src/Channel.cpp
+		./Src/Client/Client.cpp \
+		./Src/Channel/Channel.cpp
 
 OBJ = $(SRC:%.cpp=%.o)
 
