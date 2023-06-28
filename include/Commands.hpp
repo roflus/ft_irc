@@ -5,7 +5,9 @@
 #include <sys/socket.h>
 #include "CheckCommands.hpp"
 #include "Server.hpp"
+#include "Client.hpp"
 
+class Client;
 class Server;
 
 // CURRENT SOCKET WORDT CLIENT *
@@ -17,11 +19,9 @@ class Commands
     public:
         Commands(Server& server);
         virtual ~Commands();
-        virtual void execute(int currentSocket) = 0;
+        virtual void execute(Client &client) = 0;
 
         Server&		_server;
-        int         currentSocket;
-
 };
 
 class Invite : public Commands
@@ -30,7 +30,7 @@ class Invite : public Commands
         Invite(Server& server);
         ~Invite();
 
-        void execute(int currentSocket);
+        void execute(Client &client);
 
 };
 
@@ -40,7 +40,7 @@ class Join : public Commands
         Join(Server& server);
         ~Join();
 
-        void execute(int currentSocket);
+        void execute(Client &client);
 
 };
 
@@ -50,7 +50,7 @@ class Kick : public Commands
         Kick(Server& server);
         ~Kick();
 
-        void execute(int currentSocket);
+        void execute(Client &client);
 
 };
 
@@ -60,7 +60,7 @@ class Mode : public Commands
         Mode(Server& server);
         ~Mode();
 
-        void execute(int currentSocket);
+        void execute(Client &client);
 
 };
 
@@ -70,7 +70,7 @@ class Nick : public Commands
         Nick(Server& server);
         ~Nick();
 
-        void execute(int currentSocket);
+        void execute(Client &client);
 
 };
 
@@ -80,7 +80,7 @@ class Pass : public Commands
         Pass(Server& server);
         ~Pass();
 
-        void execute(int currentSocket);
+        void execute(Client &client);
 
 };
 
@@ -90,7 +90,7 @@ class Privmsg : public Commands
         Privmsg(Server& server);
         ~Privmsg();
 
-        void execute(int currentSocket);
+        void execute(Client &client);
 
 };
 
@@ -100,7 +100,7 @@ class Topic : public Commands
         Topic(Server& server);
         ~Topic();
 
-        void execute(int currentSocket);
+        void execute(Client &client);
 
 };
 
@@ -110,7 +110,7 @@ class User : public Commands
         User(Server& server);
         ~User();
 
-        void execute(int currentSocket);
+        void execute(Client &client);
 
 };
 

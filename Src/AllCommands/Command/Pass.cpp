@@ -8,9 +8,9 @@ Pass::~Pass()
 {
 }
 
-void  Pass::execute(int currentSocket)
+void  Pass::execute(Client &client)
 {
-    std::cout << "HELLO NOW Pass" << std::endl;
-    _server.message = "PASS THE QUICHE\n";
-    send(currentSocket, _server.message, strlen(_server.message), 0);
+    std::cout << "HELLO NOW Invite" << std::endl;
+    client.message = "WHO DO YOU WANT TO INVITE\n";
+    send(client.getSocket(), client.message, strlen(client.message), 0);
 } 

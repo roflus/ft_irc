@@ -8,9 +8,9 @@ Mode::~Mode()
 {
 }
 
-void  Mode::execute(int currentSocket)
+void  Mode::execute(Client &client)
 {
-    std::cout << "HELLO NOW Mode" << std::endl;
-    _server.message = "MODE YOU OR MODE ME\n";
-    send(currentSocket, _server.message, strlen(_server.message), 0);
+    std::cout << "HELLO NOW Invite" << std::endl;
+    client.message = "WHO DO YOU WANT TO INVITE\n";
+    send(client.getSocket(), client.message, strlen(client.message), 0);
 } 

@@ -11,14 +11,16 @@
 # include <vector>
 # include <poll.h>
 # include <map>
-# include "../Src/Commands/Commands.hpp"
-# include "../include/Client.hpp"
-# include "../include/Channel.hpp"
+# include "Commands.hpp"
+# include "Client.hpp"
+# include "Channel.hpp"
 # include <exception>
 
 
 # define MAX_CLIENTS    10
-# define BUFFER_SIZE     1024
+# define BUFFER_SIZE    1024
+
+class CheckCommands;
 
 class Server {
 
@@ -32,6 +34,8 @@ class Server {
         const in_port_t                 _port;
         const std::string               _password;
         int                             _serverSocket;
+
+        CheckCommands*                  _checkCommands;
 
     public:
         Server(const std::string &port, const std::string &password);

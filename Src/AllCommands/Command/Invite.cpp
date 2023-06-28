@@ -8,9 +8,9 @@ Invite::~Invite()
 {
 }
 
-void  Invite::execute(int currentSocket)
+void  Invite::execute(Client &client)
 {
     std::cout << "HELLO NOW Invite" << std::endl;
-    _server.message = "WHO DO YOU WANT TO INVITE\n";
-    send(currentSocket, _server.message, strlen(_server.message), 0);
+    client.message = "WHO DO YOU WANT TO INVITE\n";
+    send(client.getSocket(), client.message, strlen(client.message), 0);
 } 

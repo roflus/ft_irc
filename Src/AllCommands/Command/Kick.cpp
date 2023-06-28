@@ -8,9 +8,9 @@ Kick::~Kick()
 {
 }
 
-void  Kick::execute(int currentSocket)
+void  Kick::execute(Client &client)
 {
-    std::cout << "HELLO NOW Kick" << std::endl;
-    _server.message = "KICK THE BALL\n";
-    send(currentSocket, _server.message, strlen(_server.message), 0);
+    std::cout << "HELLO NOW Invite" << std::endl;
+    client.message = "WHO DO YOU WANT TO INVITE\n";
+    send(client.getSocket(), client.message, strlen(client.message), 0);
 } 

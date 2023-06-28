@@ -3,7 +3,8 @@
 Server::Server(const std::string &port, const std::string &password) : 
     _serverSocket(-1),
     _port(atoi(port.c_str())), 
-    _password(password)
+    _password(password),
+    _checkCommands(new CheckCommands(*this))
     {}
     /* Bind listen dus server opstarten kan hier?
     Maaaar..... dan moeten we dus namespace doen, kan wel ? wat denk jij? is wel BigBrain 
@@ -96,6 +97,7 @@ void Server::runServer(){
                     - daarna kunnen we met pollin kijken ofzo ik weet het niet bladsflasdf????..?
                 */
                 receiveMessages(*client);
+                _checkCommands->findCommand(*client);
             }
         }
     }
@@ -105,7 +107,6 @@ void Server::runServer(){
 
 void Server::receiveMessages(Client &client){
     // Check for activity on the client sockets (incoming data)
-    Commands command;
 
     std::map<int, Client*>::iterator it = _clients.find(client.getSocket());
     if (it != _clients.end())

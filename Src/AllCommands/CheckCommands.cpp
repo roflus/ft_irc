@@ -23,19 +23,19 @@ Commands*   CheckCommands::getCommand(std::string &command) const
     
 }
 
-void  CheckCommands::findCommand(int currentSocket, char *buffer)
+void  CheckCommands::findCommand(Client &client)
 {
-        std::string receivedMessage(buffer);
+        std::string receivedMessage = client.getBuffer();
         std::string check = receivedMessage.substr(0, receivedMessage.find(' '));
         std::map<std::string, Commands*>::iterator iter = _commands.find(check);
         if (iter != _commands.end())
-            executeCommand(currentSocket, check);
+            executeCommand(client, check);
 } 
 
 // CURRENT SOCKET WORDT CLIENT *
-void  CheckCommands::executeCommand(int currentSocket, std::string key) 
+void  CheckCommands::executeCommand(Client &client, std::string key) 
 {
     Commands*    command;
     command = this->getCommand(key);
-    command->execute(currentSocket);
+    command->execute(client);
 }

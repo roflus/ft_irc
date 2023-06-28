@@ -6,10 +6,11 @@
 #include <map>
 #include "Commands.hpp"
 #include "Server.hpp"
+#include "Client.hpp"
 
+class Client;
 class Server;
 class Commands;
-
 
 class CheckCommands
 {
@@ -18,25 +19,14 @@ class CheckCommands
         ~CheckCommands();
 
         Commands*       getCommand(std::string &command) const;
-        void            findCommand(int currentSocket, char *buffer);
-        void            executeCommand(int currentSocket, std::string key);
-
-
-
+        void            findCommand(Client &client);
+        void            executeCommand(Client &client, std::string key);
 
         std::map<std::string, Commands*>		_commands;
         Server&                                 _server;
 
-
-    
     private:
-
-
-
-
-
-
-
+    
 };
 
 #endif

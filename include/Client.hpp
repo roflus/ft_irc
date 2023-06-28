@@ -42,6 +42,9 @@ public:
 
 
     bool        HandleBuffer();
+
+    // PUUR FOR TESTING
+    const char *message;
 };
 
 

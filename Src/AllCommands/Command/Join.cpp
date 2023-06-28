@@ -8,9 +8,9 @@ Join::~Join()
 {
 }
 
-void  Join::execute(int currentSocket)
+void  Join::execute(Client &client)
 {
     std::cout << "HELLO NOW NICK" << std::endl;
-    _server.message = "JOIN THE DARK SIDE\n";
-    send(currentSocket, _server.message, strlen(_server.message), 0);
+    client.message  = "JOIN THE DARK SIDE\n";
+    send(client.getSocket(), client.message, strlen(client.message), 0);
 } 
