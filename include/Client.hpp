@@ -5,6 +5,7 @@
 # include <map>
 # include <netinet/in.h>
 # include <queue>
+# include <deque>
 # include <sstream>
 
 # define BUFFER_SIZE    1024
@@ -22,32 +23,33 @@ private:
     int         _clientSocket;
     bool        _isRegistered;
 
-    std::queue<std::string> _arguments;
+    std::deque<std::string> _arguments;
 
 public:
     Client();
     ~Client();
 
     /* Getter methods */
-    std::string getUsername();
-    std::string getPassword();
-    std::string getNickname();
-    std::string getBuffer();
-    sockaddr_in *getSockaddr();
-    int         getSocket();
-    std::queue<std::string> getArguments();
+    std::string 			getUsername();
+    std::string 			getPassword();
+    std::string 			getNickname();
+    std::string 			getBuffer();
+    sockaddr_in 			*getSockaddr();
+    int                     getSocket();
+	std::string				getKey();
+    std::deque<std::string> getArguments();
 
 
     /* Setter methods */
-    void        setUsername(const std::string &username);
-    void        setPassword(const std::string &password);
-    void        setNickname(const std::string &nickname);
-    void        setBuffer(const std::string &buffer);
-    void        setSocket(const int &clientSocket);
+    void                            setUsername(const std::string &username);
+    void                            setPassword(const std::string &password);
+    void        					setNickname(const std::string &nickname);
+    void        					setBuffer(const std::string &buffer);
+    void        					setSocket(const int &clientSocket);
 
 
-    bool        HandleBuffer();
-    void        parseBuffer();
+    bool                            HandleBuffer();
+    std::deque<std::string>         parseBuffer();
 
     // PUUR FOR TESTING
     const char *message;

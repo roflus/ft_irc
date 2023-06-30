@@ -11,6 +11,7 @@
 # include <vector>
 # include <poll.h>
 # include <map>
+# include <deque>
 # include "Commands.hpp"
 # include "Client.hpp"
 # include "Channel.hpp"

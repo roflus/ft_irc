@@ -10,7 +10,7 @@ Kick::~Kick()
 
 void  Kick::execute(Client &client)
 {
+    std::string arguments = client.getArguments().front() + '\n';
     std::cout << "HELLO NOW Invite" << std::endl;
-    client.message = "WHO DO YOU WANT TO INVITE\n";
-    send(client.getSocket(), client.message, strlen(client.message), 0);
+    send(client.getSocket(), &arguments, arguments.length(), 0);
 } 

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sys/socket.h>
 #include <map>
+#include <deque>
 #include "Commands.hpp"
 #include "Server.hpp"
 #include "Client.hpp"

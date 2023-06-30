@@ -3,15 +3,13 @@
 
 #include <iostream>
 #include <sys/socket.h>
+#include <deque>
 #include "CheckCommands.hpp"
 #include "Server.hpp"
 #include "Client.hpp"
 
 class Client;
 class Server;
-
-// CURRENT SOCKET WORDT CLIENT *
-
 class Commands
 {
     private:

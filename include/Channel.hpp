@@ -3,6 +3,7 @@
 
 #include "iostream"
 #include <vector>
+#include <deque>
 #include "Client.hpp"
 
 class Channel

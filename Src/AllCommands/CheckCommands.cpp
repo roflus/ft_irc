@@ -25,15 +25,10 @@ Commands*   CheckCommands::getCommand(std::string &command) const
 
 void  CheckCommands::findCommand(Client &client)
 {
-        std::string receivedMessage = client.getBuffer();
-        std::string check = receivedMessage.substr(0, receivedMessage.find(' '));
-
-        // std::string check = client.getArguments().front();
-        // client.getArguments().pop();
-        // std::cout << "jaargumentsja" << client.getArguments().front() << std::endl;
-        std::map<std::string, Commands*>::iterator iter = _commands.find(check);
+        std::string key = client.getKey(); 
+        std::map<std::string, Commands*>::iterator iter = _commands.find(key);
         if (iter != _commands.end())
-            executeCommand(client, check);
+            executeCommand(client, key);
 } 
 
 // CURRENT SOCKET WORDT CLIENT *

@@ -21,7 +21,9 @@ std::string Client::getNickname() { return this->_nickname; }
 std::string Client::getBuffer() {return this->_buffer; }
 int         Client::getSocket() { return this->_clientSocket; }
 sockaddr_in *Client::getSockaddr() { return &_address; }
-std::queue<std::string> Client::getArguments() {return this->_arguments;}
+std::deque<std::string> Client::getArguments() {return this->_arguments;}
+
+//std::queue<std::string> Client::getArguments() {return this->_arguments;}
 
 /*Setters*/
 void        Client::setUsername(const std::string &username) { this->_username = username; }
@@ -30,6 +32,23 @@ void        Client::setNickname(const std::string &nickname) { this->_nickname =
 void        Client::setBuffer(const std::string &buffer) { this->_buffer = buffer; }
 void        Client::setSocket(const int &clientSocket) { this->_clientSocket = clientSocket; }
 
+std::string Client::getKey() {
+
+    // Find the key (Argument tot space)
+    // Nog een check toevoegen if (!_arguments.empty())
+    std::string fullString = _arguments.front();
+    size_t space = fullString.find(' ');
+    std::string key;
+    if (space != std::string::npos)
+        key = fullString.substr(0, space);
+    else
+        key = fullString;
+
+    size_t pos = 0;
+    while ((pos = _arguments.front().find(key, pos)) != std::string::npos) 
+        _arguments.front().erase(pos, key.length() + 1);
+    return key;
+}
 
 bool        Client::HandleBuffer() {
     char buffer[BUFFER_SIZE];
@@ -42,14 +61,13 @@ bool        Client::HandleBuffer() {
         return false;
     buffer[bytesRead] = '\0';
     this->_buffer += buffer;
-    parseBuffer();
+    _arguments.clear();
+    _arguments = parseBuffer();
     return true;
 }
 
-void    Client::parseBuffer() {
-    std::stringstream ss(getBuffer());
-    std::string argument;
-
-    while (ss >> argument)
-        _arguments.push(argument);
+std::deque<std::string> Client::parseBuffer() {
+    std::deque<std::string> deque;
+    deque.push_back(this->_buffer);
+    return deque;
 }
