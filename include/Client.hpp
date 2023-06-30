@@ -49,7 +49,7 @@ public:
 
 
     bool                            HandleBuffer();
-    std::deque<std::string>         parseBuffer();
+    void                            parseBuffer();
 
     // PUUR FOR TESTING
     const char *message;

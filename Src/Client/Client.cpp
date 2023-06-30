@@ -35,18 +35,12 @@ void        Client::setSocket(const int &clientSocket) { this->_clientSocket = c
 std::string Client::getKey() {
 
     // Find the key (Argument tot space)
-    // Nog een check toevoegen if (!_arguments.empty())
-    std::string fullString = _arguments.front();
-    size_t space = fullString.find(' ');
-    std::string key;
-    if (space != std::string::npos)
-        key = fullString.substr(0, space);
-    else
-        key = fullString;
+    // Nog een check toevoegen if (!_arguments.empty() etc.)
 
-    size_t pos = 0;
-    while ((pos = _arguments.front().find(key, pos)) != std::string::npos) 
-        _arguments.front().erase(pos, key.length() + 1);
+    std::string key;
+    if (!_arguments.empty())
+        key = _arguments.front();
+    _arguments.pop_front();
     return key;
 }
 
@@ -61,13 +55,14 @@ bool        Client::HandleBuffer() {
         return false;
     buffer[bytesRead] = '\0';
     this->_buffer += buffer;
-    _arguments.clear();
-    _arguments = parseBuffer();
+    parseBuffer();
     return true;
 }
 
-std::deque<std::string> Client::parseBuffer() {
-    std::deque<std::string> deque;
-    deque.push_back(this->_buffer);
-    return deque;
+void Client::parseBuffer() {
+    std::istringstream stream(this->_buffer);
+    std::string word;
+    _arguments.clear();
+    while (stream >> word)
+        _arguments.push_back(word);
 }
