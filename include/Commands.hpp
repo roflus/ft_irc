@@ -93,6 +93,16 @@ class Privmsg : public Commands
         void    messageClient(Client &client);
 };
 
+class Quit : public Commands
+{
+    public:
+        Quit(Server& server);
+        ~Quit();
+
+        void execute(Client &client);
+
+};
+
 class Topic : public Commands
 {
     public:

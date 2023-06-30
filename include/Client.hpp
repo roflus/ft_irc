@@ -34,6 +34,7 @@ public:
     std::string 			getUsername();
     std::string 			getPassword();
     std::string 			getNickname();
+    bool                    getRegistrated();
     std::string 			getBuffer();
     sockaddr_in 			*getSockaddr();
     int                     getSocket();
@@ -41,20 +42,16 @@ public:
     std::deque<std::string> getArguments();
     const char*             getMessage(bool newline);
 
-
-
     /* Setter methods */
     void                            setUsername(const std::string &username);
     void                            setPassword(const std::string &password);
     void        					setNickname(const std::string &nickname);
     void        					setBuffer(const std::string &buffer);
     void        					setSocket(const int &clientSocket);
-
+    void                            setRegistrated(bool isRegistered);
 
     bool                            HandleBuffer();
     void                            parseBuffer();
-
-    //Testing
 };
 
 

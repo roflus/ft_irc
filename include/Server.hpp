@@ -41,7 +41,6 @@ class Server {
     public:
         Server(const std::string &port, const std::string &password);
         ~Server();
-
         /*
             GetUser
             AddUser
@@ -51,7 +50,6 @@ class Server {
             AddChannel
             RemoveChannel
         */
-
         Client* getClientNickname(std::string nickname);
 
         Client* GetClient(int fd);
@@ -61,6 +59,8 @@ class Server {
         Channel* GetChannel(std::string channelName);
         Channel* AddChannel(std::string channelName);
         void     RemoveChannel(std::string channelName);
+
+        std::string getPassword();
         
         in_port_t GetPort();
         bool      CheckPassword();

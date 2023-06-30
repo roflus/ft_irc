@@ -14,6 +14,8 @@ Server::~Server() {
     stopServer();
 }
 
+std::string Server::getPassword() { return this->_password; }
+
 void Server::stopServer() {
     if (_serverSocket != -1) {
         close(_serverSocket);
@@ -99,16 +101,13 @@ void Server::runServer(){
 
 void Server::receiveMessages(Client &client){
     // Check for activity on the client sockets (incoming data)
-
     std::map<int, Client*>::iterator it = _clients.find(client.getSocket());
     if (it != _clients.end())
     {
         std::cout << "Received message from " << it->second->getNickname() \
             << std::endl << it->second->getBuffer() << std::endl;
-        // command.checkCommands(currentSocket, buffer);
     }
 }
-
 
 void Server::acceptClient(){
     /* hier een nieuwe Client class aanmaken de socket naar accept zetten en dan in die map zetten */
@@ -125,7 +124,7 @@ void Server::acceptClient(){
     _pollfds.push_back(clientPollfd);
     
     _clients[client->getSocket()] = client;
-    std::string message = "Hello, welcome to Rolf and Quilfort's Server! What is your Nickname?\n";
+    std::string message = "Welcome! Give NICKname and PASSword\n";
     send(client->getSocket(), message.c_str(), message.size(), 0);
 }
 

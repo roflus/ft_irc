@@ -15,6 +15,7 @@ SRC = 	./Src/Main.cpp \
 		./Src/AllCommands/Command/Nick.cpp \
 		./Src/AllCommands/Command/Pass.cpp \
 		./Src/AllCommands/Command/Privmsg.cpp \
+		./Src/AllCommands/Command/Quit.cpp \
 		./Src/AllCommands/Command/Topic.cpp \
 		./Src/AllCommands/Command/User.cpp 
 
