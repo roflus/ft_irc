@@ -51,6 +51,9 @@ class Server {
             AddChannel
             RemoveChannel
         */
+
+        Client* getClientNickname(std::string nickname);
+
         Client* GetClient(int fd);
         Client* AddClient(int fd);
         void    RemoveClient(int fd);

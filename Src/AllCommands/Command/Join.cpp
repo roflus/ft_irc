@@ -11,6 +11,6 @@ Join::~Join()
 void  Join::execute(Client &client)
 {
     std::cout << "HELLO NOW NICK" << std::endl;
-    client.message  = "JOIN THE DARK SIDE\n";
-    send(client.getSocket(), client.message, strlen(client.message), 0);
+    send(client.getSocket(), client.getMessage(true), strlen(client.getMessage(true)), 0);
+
 } 

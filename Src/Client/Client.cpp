@@ -6,7 +6,8 @@ Client::Client()
       _password(""),
       _address(),
       _clientSocket(0),
-      _isRegistered(false)
+      _isRegistered(false),
+      _message("")
 {
 }
 
@@ -23,7 +24,19 @@ int         Client::getSocket() { return this->_clientSocket; }
 sockaddr_in *Client::getSockaddr() { return &_address; }
 std::deque<std::string> Client::getArguments() {return this->_arguments;}
 
-//std::queue<std::string> Client::getArguments() {return this->_arguments;}
+
+const char* Client::getMessage(bool newline) {
+    std::string stringMessage;
+    std::deque<std::string>::const_iterator it;
+    for (it = _arguments.begin(); it != _arguments.end(); ++it) {
+        stringMessage += *it;
+        stringMessage += " ";
+    }
+    if (newline == true)
+        stringMessage += "\n";
+    _message = stringMessage.c_str();
+    return this->_message;
+}
 
 /*Setters*/
 void        Client::setUsername(const std::string &username) { this->_username = username; }
@@ -32,8 +45,7 @@ void        Client::setNickname(const std::string &nickname) { this->_nickname =
 void        Client::setBuffer(const std::string &buffer) { this->_buffer = buffer; }
 void        Client::setSocket(const int &clientSocket) { this->_clientSocket = clientSocket; }
 
-std::string Client::getKey() {
-
+std::string Client::getKey(){
     // Find the key (Argument tot space)
     // Nog een check toevoegen if (!_arguments.empty() etc.)
 

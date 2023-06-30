@@ -14,17 +14,18 @@ void  Kick::execute(Client &client)
     // Direct(it = client.getArguments().begin()) of extra var
     // nog altijd een space teveel
 
-    const char* message;
+    //const char* message;
 
-    // eigen functie in client?
-    std::string stringMessage;
-    std::deque<std::string> deque = client.getArguments();
-    std::deque<std::string>::const_iterator it;
-    for (it = deque.begin(); it != deque.end(); ++it) {
-        stringMessage += *it;
-        stringMessage += " ";
-    }
-    stringMessage += "\n";
-    message = stringMessage.c_str();
-    send(client.getSocket(), message, strlen(message), 0);
+    //// eigen functie in client?
+    //std::string stringMessage;
+    //std::deque<std::string> deque = client.getArguments();
+    //std::deque<std::string>::const_iterator it;
+    //for (it = deque.begin(); it != deque.end(); ++it) {
+    //    stringMessage += *it;
+    //    stringMessage += " ";
+    //}
+    //stringMessage += "\n";
+    //message = stringMessage.c_str();
+    send(client.getSocket(), client.getMessage(true), strlen(client.getMessage(true)), 0);
+
 } 

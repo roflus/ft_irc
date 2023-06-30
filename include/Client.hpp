@@ -24,6 +24,7 @@ private:
     bool        _isRegistered;
 
     std::deque<std::string> _arguments;
+    const char* _message;
 
 public:
     Client();
@@ -38,6 +39,8 @@ public:
     int                     getSocket();
 	std::string				getKey();
     std::deque<std::string> getArguments();
+    const char*             getMessage(bool newline);
+
 
 
     /* Setter methods */
@@ -51,8 +54,7 @@ public:
     bool                            HandleBuffer();
     void                            parseBuffer();
 
-    // PUUR FOR TESTING
-    const char *message;
+    //Testing
 };
 
 

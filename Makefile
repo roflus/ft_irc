@@ -3,6 +3,7 @@ FLAGS = -Wall -Wextra -Werror -std=c++98
 HEADER = -I ./include
 SRC = 	./Src/Main.cpp \
 		./Src/Server/Server.cpp \
+		./Src/Server/ServerClient.cpp \
 		./Src/Client/Client.cpp \
 		./Src/Channel/Channel.cpp \
 		./Src/AllCommands/Commands.cpp \

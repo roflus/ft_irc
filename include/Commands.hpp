@@ -2,6 +2,7 @@
 # define COMMANDS_HPP
 
 #include <iostream>
+#include <string>
 #include <sys/socket.h>
 #include <deque>
 #include "CheckCommands.hpp"
@@ -88,8 +89,8 @@ class Privmsg : public Commands
         Privmsg(Server& server);
         ~Privmsg();
 
-        void execute(Client &client);
-
+        void    execute(Client &client);
+        void    messageClient(Client &client);
 };
 
 class Topic : public Commands

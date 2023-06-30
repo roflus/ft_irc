@@ -14,14 +14,6 @@ Server::~Server() {
     stopServer();
 }
 
-Client *Server::GetClient(int fd) {
-    std::map<int, Client*>::iterator it = _clients.find(fd);
-    if (it != _clients.end())
-        return it->second;
-    else
-        throw ServerException("Client not found");
-}
-
 void Server::stopServer() {
     if (_serverSocket != -1) {
         close(_serverSocket);
@@ -111,7 +103,8 @@ void Server::receiveMessages(Client &client){
     std::map<int, Client*>::iterator it = _clients.find(client.getSocket());
     if (it != _clients.end())
     {
-        std::cout << "Received message from " << it->second->getSocket() << it->second->getBuffer() << std::endl;
+        std::cout << "Received message from " << it->second->getNickname() \
+            << std::endl << it->second->getBuffer() << std::endl;
         // command.checkCommands(currentSocket, buffer);
     }
 }
