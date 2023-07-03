@@ -20,13 +20,14 @@ std::string Client::getUsername() { return this->_username; }
 std::string Client::getPassword() { return this->_password; }
 std::string Client::getNickname() { return this->_nickname; }
 bool        Client::getRegistrated() { return this->_isRegistered; }
+bool        Client::getIsModerator() {return this->_isModerator;}
 std::string Client::getBuffer() {return this->_buffer; }
 int         Client::getSocket() { return this->_clientSocket; }
 sockaddr_in *Client::getSockaddr() { return &_address; }
 std::deque<std::string> Client::getArguments() {return this->_arguments;}
 
 
-const char* Client::getMessage(bool newline) {
+std::string Client::getMessage(bool newline) {
     std::string stringMessage;
     std::deque<std::string>::const_iterator it;
     for (it = _arguments.begin(); it != _arguments.end(); ++it) {
@@ -35,8 +36,7 @@ const char* Client::getMessage(bool newline) {
     }
     if (newline == true)
         stringMessage += "\n";
-    _message = stringMessage.c_str();
-    return this->_message;
+    return stringMessage;
 }
 
 /*Setters*/
@@ -46,12 +46,16 @@ void        Client::setNickname(const std::string &nickname) { this->_nickname =
 void        Client::setRegistrated(bool isRegistered) { this->_isRegistered = isRegistered; }
 void        Client::setBuffer(const std::string &buffer) { this->_buffer = buffer; }
 void        Client::setSocket(const int &clientSocket) { this->_clientSocket = clientSocket; }
+void        Client::setIsModerator(const bool &isModerator) { this->_isModerator = isModerator; }
+
 
 std::string Client::getKey(){
     // Find the key (Argument tot space)
-    // Nog een check toevoegen if (!_arguments.empty() etc.)
+    // Nog een check toevoegen if (_arguments.empty() etc.)
 
     std::string key;
+    if (_arguments.empty())
+        return NULL;
     if (!_arguments.empty())
         key = _arguments.front();
     _arguments.pop_front();

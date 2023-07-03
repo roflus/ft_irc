@@ -15,7 +15,7 @@ private:
     std::vector<Client *>   _users;
     std::vector<Client *>   _moderators;
 public:
-    Channel(std::string name, std::string password);
+    Channel(std::string name);
     ~Channel();
 
     bool    isUserInChannel(Client &client);
@@ -26,14 +26,14 @@ public:
     void    removeModerator(Client &Client);
     void    removeUser(Client &client);
 
+    void    sendMessageToUsers(std::string message);
 
 
     void    setTopic(std::string topic);
 
     std::string                 getName();
-    std::string                 getTopic();
+    std::string                 &getTopic();
     std::string                 getPassword();
-    std::vector<std::string>    getUsers();
 
 
 };

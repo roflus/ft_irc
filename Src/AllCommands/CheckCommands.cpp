@@ -34,7 +34,7 @@ void  CheckCommands::enterServer(Client &client) {
     else if (key == "QUIT")
         executeCommand(client, key);
     else{
-        std::string message = "CHOOSE NICK, PASS OR QUIT";
+        std::string message = "CHOOSE NICK, PASS OR QUIT\n";
         send(client.getSocket(), message.c_str(), message.size(), 0);
     }
 }

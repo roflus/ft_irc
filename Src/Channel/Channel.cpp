@@ -1,10 +1,10 @@
 
 #include "../../include/Channel.hpp"
 
-Channel::Channel(std::string name, std::string password)
+Channel::Channel(std::string name)
     : _name(name),
       _topic("No topic"),
-      _password(password)
+      _password("hallo")
 {
 
 }
@@ -17,8 +17,22 @@ void    Channel::setTopic(std::string topic) {
     this->_topic = topic;
 }
 
-std::string Channel::getTopic(){
-    return this->_topic;
+std::string &Channel::getTopic() {
+    return _topic;
+}
+
+std::string Channel::getName() {
+    return this->_name;
+}
+
+
+void    Channel::sendMessageToUsers(std::string message) {
+    std::vector<Client *>::iterator it;
+    Client *client;
+    for(it = _users.begin(); it != _users.end(); it++) {
+        client = *it;
+        send(client->getSocket(), message.c_str(), message.size(), 0);
+    }
 }
 
 bool    Channel::isUserInChannel(Client &client) {
@@ -45,8 +59,10 @@ void    Channel::addUser(Client &client) {
 }
 
 void    Channel::addModerator(Client &client) {
-    if (isUserInChannel(client) && !isUserModerator(client))
+    if (isUserInChannel(client) && !isUserModerator(client)) {
         _moderators.push_back(&client);
+        client.setIsModerator(true);
+    }
 }
 
 void Channel::removeUser(Client& client) {

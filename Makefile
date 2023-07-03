@@ -4,6 +4,7 @@ HEADER = -I ./include
 SRC = 	./Src/Main.cpp \
 		./Src/Server/Server.cpp \
 		./Src/Server/ServerClient.cpp \
+		./Src/Server/ServerChannel.cpp \
 		./Src/Client/Client.cpp \
 		./Src/Channel/Channel.cpp \
 		./Src/AllCommands/Commands.cpp \

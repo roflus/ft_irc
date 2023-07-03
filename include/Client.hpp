@@ -22,6 +22,7 @@ private:
     std::string _buffer;
     int         _clientSocket;
     bool        _isRegistered;
+    bool        _isModerator;
 
     std::deque<std::string> _arguments;
     const char* _message;
@@ -35,12 +36,13 @@ public:
     std::string 			getPassword();
     std::string 			getNickname();
     bool                    getRegistrated();
+    bool                    getIsModerator();
     std::string 			getBuffer();
     sockaddr_in 			*getSockaddr();
     int                     getSocket();
 	std::string				getKey();
     std::deque<std::string> getArguments();
-    const char*             getMessage(bool newline);
+    std::string             getMessage(bool newline);
 
     /* Setter methods */
     void                            setUsername(const std::string &username);
@@ -49,6 +51,7 @@ public:
     void        					setBuffer(const std::string &buffer);
     void        					setSocket(const int &clientSocket);
     void                            setRegistrated(bool isRegistered);
+    void                            setIsModerator(const bool &isModerator);
 
     bool                            HandleBuffer();
     void                            parseBuffer();

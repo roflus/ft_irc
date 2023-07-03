@@ -11,6 +11,7 @@ Nick::~Nick()
 void  Nick::execute(Client &client)
 {
     // NICKNAME NU NOG ZONDER SPATIE
+    // Username mag dan ook niet beginne met #
     std::string nickname(client.getKey());
     std::cout << "std::string: " << nickname << std::endl;
     std::cout << "Client nickname was: " << client.getNickname() << std::endl;
