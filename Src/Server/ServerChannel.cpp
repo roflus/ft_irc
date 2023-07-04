@@ -16,6 +16,9 @@ Channel* Server::AddChannel(std::string channelName) {
     return newChannel;
 }
 
-// void     Server::RemoveChannel(std::string channelName) {
-
-// }
+void     Server::RemoveChannel(std::string channelName) {
+    std::map<std::string, Channel *>::iterator it = _channels.find(channelName);
+    if (it != _channels.end()) {
+        _channels.erase(it);
+    }
+}

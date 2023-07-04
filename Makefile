@@ -6,7 +6,10 @@ SRC = 	./Src/Main.cpp \
 		./Src/Server/ServerClient.cpp \
 		./Src/Server/ServerChannel.cpp \
 		./Src/Client/Client.cpp \
+		./Src/Client/ClientParser.cpp \
 		./Src/Channel/Channel.cpp \
+		./Src/Channel/ChannelUser.cpp \
+		./Src/Channel/ChannelMod.cpp \
 		./Src/AllCommands/Commands.cpp \
 		./Src/AllCommands/CheckCommands.cpp \
 		./Src/AllCommands/Command/Invite.cpp \

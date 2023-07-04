@@ -111,24 +111,6 @@ void Server::receiveMessages(Client &client){
     }
 }
 
-void Server::acceptClient(){
-    /* hier een nieuwe Client class aanmaken de socket naar accept zetten en dan in die map zetten */
-    Client *client;
-    client = new Client;
-    socklen_t clientAddressSize = sizeof(client->getSockaddr());
-    client->setSocket(accept(_serverSocket, (sockaddr *)client->getSockaddr(), &clientAddressSize));
-    if (client->getSocket() == -1)
-        throw ServerException("Failed to listen server socket");
-
-    pollfd clientPollfd;
-    clientPollfd.fd = client->getSocket();
-    clientPollfd.events = POLLIN;
-    _pollfds.push_back(clientPollfd);
-    
-    _clients[client->getSocket()] = client;
-    std::string message = "Welcome! Give NICKname and PASSword\n";
-    send(client->getSocket(), message.c_str(), message.size(), 0);
-}
 
 bool Server::HandleData(Client &client) {
 
