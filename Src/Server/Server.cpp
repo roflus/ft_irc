@@ -94,6 +94,8 @@ void Server::runServer(){
                 _checkCommands->findCommand(*client);
             }
         }
+
+
     }
     stopServer();
     return ;

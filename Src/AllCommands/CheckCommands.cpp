@@ -47,7 +47,7 @@ void  CheckCommands::findCommand(Client &client)
         }
         else
         {
-            std::string key = client.getKey(); 
+            std::string key = client.getKey();
             std::map<std::string, Commands*>::iterator iter = _commands.find(key);
             if (iter != _commands.end())
                 executeCommand(client, key);

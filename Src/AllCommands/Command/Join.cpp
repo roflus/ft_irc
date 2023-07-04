@@ -14,7 +14,12 @@ void  Join::execute(Client &client)
     std::string channelName(client.getKey());
     bool isNewChannel;
 
-    channel = _server.GetChannel(channelName);
+    if (channelName[0] != '#'){
+        std::string message = "Channel name needs to start with a '#' \n";
+        send(client.getSocket(), message.c_str(), message.size(), 0);
+        return ;
+    }
+    channel = _server.getChannel(channelName);
     if (!channel) {
         isNewChannel = true;
         channel = _server.AddChannel(channelName);

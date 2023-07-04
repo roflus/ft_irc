@@ -12,7 +12,7 @@ void  Topic::execute(Client &client)
 {
     std::string channelName(client.getKey());
     Channel *channel;
-    channel = _server.GetChannel(channelName);
+    channel = _server.getChannel(channelName);
     if (!channel)
         return ;
     if (channel->isUserInChannel(client)) {

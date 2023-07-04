@@ -1,6 +1,6 @@
 #include "../../include/Server.hpp"
 
-Channel* Server::GetChannel(std::string channelName) {
+Channel* Server::getChannel(std::string channelName) {
     std::map<std::string, Channel *>::iterator it;
     for (it = _channels.begin(); it != _channels.end(); it++) {
         if (channelName == it->first)

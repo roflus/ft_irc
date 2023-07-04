@@ -90,7 +90,8 @@ class Privmsg : public Commands
         ~Privmsg();
 
         void    execute(Client &client);
-        void    messageClient(Client &client);
+        void    messageClient(Client &client, std::string &target);
+        void    messageChannel(Client &client, std::string &target);
 };
 
 class Quit : public Commands
