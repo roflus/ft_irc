@@ -13,10 +13,8 @@ void    Privmsg::messageClient(Client &client, std::string &target){
     if (targetClient != NULL) {
         targetClient->setSendMessage(client.getNickname(), "", client.getMessage(true));
     }
-    else {
-        std::string error = "USERNAME NOT ONLINE, TRY AGAIN\n";
-        client.setSendMessage("SYSTEM", "", error);
-    }
+    else 
+        client.setErrorMessage("User is not available, try again\n");
 }
 
 void   Privmsg::messageChannel(Client &client, std::string &target) {
@@ -31,7 +29,7 @@ void   Privmsg::messageChannel(Client &client, std::string &target) {
             targetChannel->sendMessageToUsers(message, client.getNickname());
     } else {
         std::string error = "You are not in channel " + target + "\n";
-        client.setSendMessage("SYSTEM", "", error);
+        client.setErrorMessage(error);
     }
 }
 

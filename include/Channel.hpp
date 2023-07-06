@@ -25,6 +25,7 @@ public:
     void    addModerator(Client &client);
     void    removeModerator(Client &Client);
     void    removeUser(Client &client);
+    void    changeModerator(Client &client, Client &targetClient);
 
     void    sendMessageToUsers(std::string message, std::string nickname);
 

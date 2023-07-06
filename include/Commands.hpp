@@ -59,8 +59,8 @@ class Mode : public Commands
         Mode(Server& server);
         ~Mode();
 
-        void execute(Client &client);
-
+        void    execute(Client &client);
+        void    accessChannel(Client &client, std::string target);
 };
 
 class Nick : public Commands

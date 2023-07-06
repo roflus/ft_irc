@@ -68,3 +68,7 @@ void        Client::setSendMessage(const std::string &name, const std::string &c
                     ": " + input;
     _sendMessage.push_back(message);
 }
+
+void		Client::setErrorMessage(const std::string &error) {
+		setSendMessage("SYSTEM", "", error);
+}

@@ -13,37 +13,37 @@
 class Client
 {
 private:
-    std::string _username;
-    std::string _nickname;
-    std::string _password;
-    sockaddr_in _address;
+    std::string                     _username;
+    std::string                     _nickname;
+    std::string                     _password;
+    sockaddr_in                     _address;
 
 
-    std::string _buffer;
-    int         _clientSocket;
-    bool        _isRegistered;
-    bool        _isModerator;
+    std::string                     _buffer;
+    int                             _clientSocket;
+    bool                            _isRegistered;
+    bool                            _isModerator;
 
-    std::deque<std::string> _arguments;
-    std::deque<std::string> _sendMessage;
-    const char* _message;
+    std::deque<std::string>         _arguments;
+    std::deque<std::string>         _sendMessage;
+    const char*                     _message;
 
 public:
     Client();
     ~Client();
 
     /* Getter methods */
-    std::string 			getUsername();
-    std::string 			getPassword();
-    std::string 			getNickname();
-    bool                    getRegistrated();
-    bool                    getIsModerator();
-    std::string 			getBuffer();
-    sockaddr_in 			*getSockaddr();
-    int                     getSocket();
-	std::string				getKey();
-    std::deque<std::string> getArguments();
-    std::string             getMessage(bool newline);
+    std::string 			        getUsername();
+    std::string 			        getPassword();
+    std::string 			        getNickname();
+    bool                            getRegistrated();
+    bool                            getIsModerator();
+    std::string 			        getBuffer();
+    sockaddr_in 			        *getSockaddr();
+    int                             getSocket();
+	std::string				        getKey();
+    std::deque<std::string>         getArguments();
+    std::string                     getMessage(bool newline);
 
     /* Setter methods */
     void                            setUsername(const std::string &username);
@@ -61,8 +61,7 @@ public:
     std::string                     getSendMessage();
     void                            setSendMessage(const std::string &name, const std::string &channel, \
                                                     const std::string &input);
-    
+    void                            setErrorMessage(const std::string &error);
 };
-
 
 #endif

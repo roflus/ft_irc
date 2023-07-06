@@ -29,10 +29,11 @@ void  Topic::execute(Client &client)
             }
         }
     } else {
-        std::string error = "You are not in the Channel";
-        client.setSendMessage("SYSTEM", "", error);
+        client.setErrorMessage("You are not in the Channel\n");
         return ;
     }
+} 
+
     /*
         eerste argument is channel
         de rest is topic
@@ -48,4 +49,3 @@ void  Topic::execute(Client &client)
                 else can niet
         else user is not in channel;
     */
-} 

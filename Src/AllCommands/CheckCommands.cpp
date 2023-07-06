@@ -49,10 +49,8 @@ void  CheckCommands::findCommand(Client &client)
         std::map<std::string, Commands*>::iterator iter = _commands.find(key);
         if (iter != _commands.end())
             executeCommand(client, key);
-        else {
-            std::string error = "CHOOSE A VALID COMMAND\n";
-            client.setSendMessage("SYSTEM", "", error);
-        }
+        else 
+            client.setErrorMessage("Start with a valid Command\n");
     }
 } 
 

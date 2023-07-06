@@ -15,8 +15,7 @@ void  Join::execute(Client &client)
     bool isNewChannel;
 
     if (channelName[0] != '#'){
-        std::string error = "Channel name needs to start with a '#' \n";
-        client.setSendMessage("SYSTEM", "", error);
+        client.setErrorMessage("Channel name needs to start with a '#' \n");
         return ;
     }
     channel = _server.getChannel(channelName);
@@ -30,14 +29,13 @@ void  Join::execute(Client &client)
         if (isNewChannel)
             channel->addModerator(client);
         std::string message = "You joined channel " + channel->getName() + "\n";
-        client.setSendMessage("SYSTEM", "", message);
+        client.setErrorMessage(message);
 
         message = client.getNickname() + " joined channel\n";
         channel->sendMessageToUsers(message, "SYSTEM");
-    } else {
-        std::string error = "You are already in this channel\n";
-        client.setSendMessage("SYSTEM", "", error);
-    }
+    } else 
+        client.setErrorMessage("You are already in this channel\n");
+} 
     /*
         Channel name meegeven: start with #
         channel password meegeven als het nodig is. 
@@ -49,5 +47,3 @@ void  Join::execute(Client &client)
         Additionally, the server broadcasts a JOIN message to all users in the channel, 
         notifying them that a new user has joined. This message typically contains the nickname of the joining user.
     */
-
-} 

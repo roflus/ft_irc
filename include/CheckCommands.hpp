@@ -19,10 +19,10 @@ class CheckCommands
         CheckCommands(Server &server);
         ~CheckCommands();
 
-        void            enterServer(Client &client);
-        Commands*       getCommand(std::string &command) const;
-        void            findCommand(Client &client);
-        void            executeCommand(Client &client, std::string key);
+        void                                    enterServer(Client &client);
+        Commands*                               getCommand(std::string &command) const;
+        void                                    findCommand(Client &client);
+        void                                    executeCommand(Client &client, std::string key);
 
         std::map<std::string, Commands*>		_commands;
         Server&                                 _server;
