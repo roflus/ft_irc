@@ -80,36 +80,13 @@ void Server::runServer(){
             if (client->checkSendMessage())
                 _pollfds[i].events |= POLLOUT;
             if ((_pollfds[i].revents & POLLIN)) {
-                if (!HandleData(*client))
-                    throw ServerException("Cant handle data");
-                receiveMessages(*client);
-                _checkCommands->findCommand(*client);
+                HandleInput(*client);
             }
-            if ((_pollfds[i].revents & POLLOUT)) {
-                if (client->checkSendMessage()){
-                    std::string message = client->getSendMessage();
-                    send(client->getSocket(), message.c_str(), message.length(), 0);
-                    // Remove POLLOUT als geen messages
-                    if (!client->checkSendMessage())
-                        _pollfds[i].events &= ~POLLOUT;
-                }
+            if ((_pollfds[i].revents & POLLOUT) && client->checkSendMessage()) {
+                HandleOutput(*client, i);
             }
         }
-        std::vector<pollfd>::iterator it = _pollfds.begin() + 1;
-        while (it != _pollfds.end()){
-            client = GetClient(it->fd);
-            if (!client->checkSendMessage())
-                it->events |= POLLOUT;
-            ++it;
-        }
-        it = this->_pollfds.begin() + 1;
-		while (it != this->_pollfds.end())
-		{
-			if (!it->events)
-				it = this->_pollfds.erase(it);
-			else
-				it++;
-		}
+        ReviewPoll();
     }
     stopServer();
     return ;
@@ -125,7 +102,6 @@ void Server::receiveMessages(Client &client){
     }
 }
 
-
 bool Server::HandleData(Client &client) {
 
     // ?? bool functie weet ik nog niet zeker?
@@ -137,6 +113,55 @@ bool Server::HandleData(Client &client) {
     // dan checken en dan overzetten in de string buffer van client
     // dan kunnen we in recievemessage voor nu uitprinten vanuit de client
 }
+
+void    Server::HandleInput(Client &client) {
+    if (!HandleData(client))
+        throw ServerException("Cant handle data");
+    receiveMessages(client);
+    _checkCommands->findCommand(client);
+}
+
+void    Server::HandleOutput(Client &client, int i) {
+    std::string message = client.getSendMessage();
+    send(client.getSocket(), message.c_str(), message.length(), 0);
+    // Remove POLLOUT als geen messages
+    if (!client.checkSendMessage())
+        _pollfds[i].events &= ~POLLOUT;
+}
+
+void    Server::ReviewPoll(){
+        Client *client;
+        std::vector<pollfd>::iterator it = _pollfds.begin() + 1;
+        while (it != _pollfds.end()){
+            client = GetClient(it->fd);
+            if (!client->checkSendMessage())
+                it->events |= POLLOUT;
+            ++it;
+        }
+        it = this->_pollfds.begin() + 1;
+		while (it != this->_pollfds.end())
+		{
+			if (!it->events)
+				it = this->_pollfds.erase(it);
+			else
+				it++;
+		}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // void Server::disconnectClient(int index){

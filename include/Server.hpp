@@ -67,6 +67,10 @@ class Server {
 
         bool    HandleData(Client &client);
 
+        void    HandleInput(Client &client);
+        void    HandleOutput(Client &client, int i);
+        void    ReviewPoll();
+
         /* custom exeption maybe toch wel een namespace gebruiken dan kun je deze exception overal gebruiken*/
         class ServerException: public std::exception {
             private: const char* _message;
