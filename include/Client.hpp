@@ -25,6 +25,7 @@ private:
     bool        _isModerator;
 
     std::deque<std::string> _arguments;
+    std::deque<std::string> _sendMessage;
     const char* _message;
 
 public:
@@ -55,6 +56,11 @@ public:
 
     bool                            HandleBuffer();
     void                            parseBuffer();
+
+    bool                            checkSendMessage();
+    std::string                     getSendMessage();
+    void                            setSendMessage(const std::string &message);
+
 };
 
 

@@ -72,30 +72,44 @@ void Server::runServer(){
             throw ServerException("Failed to listen server socket");
 
         if (_pollfds[0].revents & POLLIN) {
-            std::cout << "kom je heir" << std::endl;
+            std::cout << "New Client Connected" << std::endl;
             acceptClient();
         }
-
         for (int i = 1; i <= _clients.size(); ++i){
+            client = GetClient(_pollfds[i].fd);
+            if (client->checkSendMessage())
+                _pollfds[i].events |= POLLOUT;
             if ((_pollfds[i].revents & POLLIN)) {
-                // pollfd &_pollfd = _pollfds[i];
-                client = GetClient(_pollfds[i].fd);
                 if (!HandleData(*client))
-                    throw ServerException("FOUT");
-                /* 
-                    - maak pollfd aan zet pollfd[i] erin
-                    - maak clien aan en zet server.getclient(intfd) erin.
-                    - Server funcite handledata(client en fd?)?
-                    - daarin client.handlebuffer()
-                    - daarin gaan parsen? iig het in de buffer van de client zetten.
-                    - daarna kunnen we met pollin kijken ofzo ik weet het niet bladsflasdf????..?
-                */
+                    throw ServerException("Cant handle data");
                 receiveMessages(*client);
                 _checkCommands->findCommand(*client);
             }
+            if ((_pollfds[i].revents & POLLOUT)) {
+                if (client->checkSendMessage()){
+                    std::string message = client->getSendMessage();
+                    send(client->getSocket(), message.c_str(), message.length(), 0);
+                    // Remove POLLOUT als geen messages
+                    if (!client->checkSendMessage())
+                        _pollfds[i].events &= ~POLLOUT;
+                }
+            }
         }
-
-
+        std::vector<pollfd>::iterator it = _pollfds.begin() + 1;
+        while (it != _pollfds.end()){
+            client = GetClient(it->fd);
+            if (!client->checkSendMessage())
+                it->events |= POLLOUT;
+            ++it;
+        }
+        it = this->_pollfds.begin() + 1;
+		while (it != this->_pollfds.end())
+		{
+			if (!it->events)
+				it = this->_pollfds.erase(it);
+			else
+				it++;
+		}
     }
     stopServer();
     return ;

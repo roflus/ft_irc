@@ -22,7 +22,7 @@ std::string Client::getKey(){
     return key;
 }
 
-void Client::parseBuffer() {
+void        Client::parseBuffer() {
     std::istringstream stream(this->_buffer);
     std::string word;
     _arguments.clear();
@@ -43,4 +43,21 @@ bool        Client::HandleBuffer() {
     this->_buffer += buffer;
     parseBuffer();
     return true;
+}
+
+bool        Client::checkSendMessage() {
+    if (_sendMessage.empty())
+        return false;
+    return true;
+}
+
+std::string Client::getSendMessage(){
+    std::string message;
+    message = _sendMessage.front();
+    _sendMessage.pop_front();
+    return (message);
+}
+
+void        Client::setSendMessage(const std::string &message){
+    _sendMessage.push_back(message);
 }
