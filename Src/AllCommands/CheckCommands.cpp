@@ -33,25 +33,27 @@ void  CheckCommands::enterServer(Client &client) {
     }
     else if (key == "QUIT")
         executeCommand(client, key);
-    else{
+    else {
         std::string message = "CHOOSE NICK, PASS OR QUIT\n";
         send(client.getSocket(), message.c_str(), message.size(), 0);
     }
 }
 
-
 void  CheckCommands::findCommand(Client &client)
 {
-        if (client.getRegistrated() == false) {
-            enterServer(client);
+    if (client.getRegistrated() == false) {
+        enterServer(client);
+    }
+    else {
+        std::string key = client.getKey();
+        std::map<std::string, Commands*>::iterator iter = _commands.find(key);
+        if (iter != _commands.end())
+            executeCommand(client, key);
+        else {
+            std::string error = "CHOOSE A VALID COMMAND\n";
+            client.setSendMessage("SYSTEM", "", error);
         }
-        else
-        {
-            std::string key = client.getKey();
-            std::map<std::string, Commands*>::iterator iter = _commands.find(key);
-            if (iter != _commands.end())
-                executeCommand(client, key);
-        }
+    }
 } 
 
 void  CheckCommands::executeCommand(Client &client, std::string key) {

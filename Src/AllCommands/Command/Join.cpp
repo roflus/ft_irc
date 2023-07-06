@@ -33,7 +33,7 @@ void  Join::execute(Client &client)
         send(client.getSocket(), message.c_str(), message.size(), 0);
         
         message = client.getNickname() + " joined channel\n";
-        channel->sendMessageToUsers(message);
+        channel->sendMessageToUsers(message, "SYSTEM");
     } else {
         std::string message = "You are already in this channel\n";
         send(client.getSocket(), message.c_str(), message.size(), 0);

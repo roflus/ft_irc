@@ -26,7 +26,7 @@ public:
     void    removeModerator(Client &Client);
     void    removeUser(Client &client);
 
-    void    sendMessageToUsers(std::string message);
+    void    sendMessageToUsers(std::string message, std::string nickname);
 
 
     void    setTopic(std::string topic);
