@@ -15,8 +15,8 @@ void  Join::execute(Client &client)
     bool isNewChannel;
 
     if (channelName[0] != '#'){
-        std::string message = "Channel name needs to start with a '#' \n";
-        send(client.getSocket(), message.c_str(), message.size(), 0);
+        std::string error = "Channel name needs to start with a '#' \n";
+        client.setSendMessage("SYSTEM", "", error);
         return ;
     }
     channel = _server.getChannel(channelName);
@@ -29,14 +29,14 @@ void  Join::execute(Client &client)
         channel->addUser(client);
         if (isNewChannel)
             channel->addModerator(client);
-        std::string message = client.getNickname() + " joined channel: #\n" + channel->getName();
-        send(client.getSocket(), message.c_str(), message.size(), 0);
-        
+        std::string message = "You joined channel " + channel->getName() + "\n";
+        client.setSendMessage("SYSTEM", "", message);
+
         message = client.getNickname() + " joined channel\n";
         channel->sendMessageToUsers(message, "SYSTEM");
     } else {
-        std::string message = "You are already in this channel\n";
-        send(client.getSocket(), message.c_str(), message.size(), 0);
+        std::string error = "You are already in this channel\n";
+        client.setSendMessage("SYSTEM", "", error);
     }
     /*
         Channel name meegeven: start with #

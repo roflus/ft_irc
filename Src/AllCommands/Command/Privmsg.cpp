@@ -30,8 +30,8 @@ void   Privmsg::messageChannel(Client &client, std::string &target) {
         if (!message.empty())
             targetChannel->sendMessageToUsers(message, client.getNickname());
     } else {
-        std::string message = "not in channel\n";
-        send(client.getSocket(), message.c_str(), message.size(), 0);
+        std::string error = "You are not in channel " + target + "\n";
+        client.setSendMessage("SYSTEM", "", error);
     }
 }
 

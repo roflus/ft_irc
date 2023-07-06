@@ -10,7 +10,5 @@ User::~User()
 
 void  User::execute(Client &client)
 {
-    std::cout << "HELLO NOW Invite" << std::endl;
-    send(client.getSocket(), client.getMessage(true).c_str(), client.getMessage(true).size(), 0);
-
+    client.setSendMessage(client.getNickname(), "", client.getMessage(true));
 } 
