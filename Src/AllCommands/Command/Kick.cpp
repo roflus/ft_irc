@@ -43,15 +43,15 @@ void Kick::execute(Client &client)
                 targetChannel->removeUser(*targetClient);
                 if (targetChannel->isUserModerator(*targetClient))
                     targetChannel->removeModerator(*targetClient);
-                std::string reason = client.getKey();
+                std::string reason = client.getMessage(true);
                 std::string message;
                 if (reason.empty()) {
                     targetClient->setSendMessage("SYSTEM", channelName, "You have been kicked from channel by: " + client.getNickname() + "\n");
                     message = clientName + " has been removed from group\n";
                 }
                 else {
-                    targetClient->setSendMessage("SYSTEM", channelName, "You have been kicked from channel by: " + client.getNickname() + " " + reason + "\n");
-                    message = clientName + " has been removed from group: " + reason + "\n";
+                    targetClient->setSendMessage("SYSTEM", channelName, "You have been kicked from channel by: " + client.getNickname() + " " + reason);
+                    message = clientName + " has been removed from group: " + reason;
                 }
                 targetChannel->sendMessageToUsers(message, "SYSTEM");
             } else {
