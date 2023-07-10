@@ -20,13 +20,16 @@ void  Topic::execute(Client &client)
             std::string &topic = channel->getTopic();
             client.setSendMessage("SYSTEM", channelName, topic.c_str());
         } else {
-            if (channel->isUserModerator(client)) {
+            if (channel->getTopicIsForMod()) {
+                if (channel->isUserModerator(client)) {
+                    channel->setTopic(client.getMessage(false));
+                } else {
+                    std::string message = "Topic can only be set by Moderators";
+                    client.setSendMessage("SYSTEM", channelName, message);
+                    return ;
+                }
+            } else
                 channel->setTopic(client.getMessage(false));
-            } else {
-                std::string message = "Topic can only be set by Moderators";
-                client.setSendMessage("SYSTEM", channelName, message);
-                return ;
-            }
         }
     } else {
         client.setErrorMessage("You are not in the Channel\n");

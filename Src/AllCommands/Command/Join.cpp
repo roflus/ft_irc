@@ -23,8 +23,7 @@ void  Join::execute(Client &client)
         isNewChannel = true;
         channel = _server.AddChannel(channelName);
     }
-    
-    if (!channel->isUserInChannel(client)) {
+    if (!channel->isUserInChannel(client) && !channel->getInviteOnly()) {
         channel->addUser(client);
         if (isNewChannel)
             channel->addModerator(client);
@@ -33,6 +32,18 @@ void  Join::execute(Client &client)
 
         message = client.getNickname() + " joined channel\n";
         channel->sendMessageToUsers(message, "SYSTEM");
+    }
+    else if (!channel->isUserInChannel(client) && channel->getInviteOnly()) {
+        if (channel->isUserInvited(client)) {
+            channel->addUser(client);
+            channel->removeInvitedClient(client);
+            std::string message = "You joined channel " + channel->getName() + "\n";
+            client.setSendMessage("SYSTEM", "", message);
+
+            message = client.getNickname() + " joined channel\n";
+            channel->sendMessageToUsers(message, "SYSTEM");
+        } else
+            client.setErrorMessage("You have to be invited to join this channel\n");
     } else 
         client.setErrorMessage("You are already in this channel\n");
 } 

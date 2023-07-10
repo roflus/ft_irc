@@ -26,3 +26,31 @@ void Channel::removeUser(Client& client) {
         }
     }
 }
+
+bool Channel::isUserInvited(Client &client) {
+    std::vector<Client *>::iterator it;
+    for (it = _invitedClients.begin(); it != _invitedClients.end(); it++)
+    {
+        if (*it == &client)
+            return true;
+    }
+    return false;
+}
+
+void Channel::addInvitedClient(Client &client) {
+    if (!isUserInvited(client))
+        _invitedClients.push_back(&client);
+}
+
+void Channel::removeInvitedClient(Client &client) {
+    if (isUserInvited(client)) {
+        std::vector<Client *>::iterator it;
+        for (it = _invitedClients.begin(); it != _invitedClients.end();)
+        {
+            if (*it == &client)
+                it = _invitedClients.erase(it);
+            else
+                ++it;
+        }
+    }
+}
