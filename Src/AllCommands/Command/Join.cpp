@@ -24,6 +24,12 @@ void  Join::execute(Client &client)
         channel = _server.AddChannel(channelName);
     }
     if (!channel->isUserInChannel(client) && !channel->getInviteOnly()) {
+        if (channel->getUserLimit() > 0) {
+            if (channel->getUserLimit() == channel->getUsersCount()) {
+                client.setErrorMessage("Channel is full, cannot join right now.\n");
+                return ;
+            }
+        }
         channel->addUser(client);
         if (isNewChannel)
             channel->addModerator(client);

@@ -39,6 +39,17 @@ void Mode::accessChannel(Client &client, std::string target)
                 else
                     client.setErrorMessage("User is not available, try again\n");
             }
+            else if (flag[1] == 'l') {
+                std::string limitString = client.getKey();
+                for (char c : limitString) {
+                    if (!std::isdigit(c)) {
+                        client.setErrorMessage("Argument for userlimit must be a number.\n");
+                        return ;
+                    }
+                }
+                int limit = atoi(limitString.c_str());
+                targetChannel->setUserLimit(limit);
+            }
         } else if (flag[0] == '-') {
             if (flag[1] == 'i')
                 targetChannel->setInviteOnly(false);
@@ -57,6 +68,8 @@ void Mode::accessChannel(Client &client, std::string target)
                 } else
                     client.setErrorMessage("User is not available, try again\n");
             }
+            else if (flag[1] == 'l')
+                targetChannel->setUserLimit(0);
         }
     } else
         client.setErrorMessage("Select the right flag\n");

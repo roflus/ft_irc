@@ -11,6 +11,14 @@ Server::Server(const std::string &port, const std::string &password) :
     voor nu is het nog hetzelfde als eerst */
 
 Server::~Server() {
+    delete _checkCommands;
+   
+    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++){
+        delete it->second;
+    }
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++) {
+        delete it->second;
+    }
     stopServer();
 }
 
@@ -23,11 +31,9 @@ void Server::stopServer() {
     }
 
     // Close all client sockets
-    for (int i = 0; i <= MAX_CLIENTS; ++i) {
-        if (_pollfds[i].fd != -1) {
-            close(_pollfds[i].fd);
-            _pollfds[i].fd = -1;
-        }
+    for (std::vector<pollfd>::iterator it =_pollfds.begin(); it != _pollfds.end(); ++it){
+        if (it->fd >= 0)
+            close(it->fd);
     }
 }
 
@@ -70,7 +76,7 @@ void Server::runServer(){
         // Use poll to wait for activity on any of the connected sockets
         if (poll(_pollfds.data(), _pollfds.size(), -1) == -1)
             throw ServerException("Failed to listen server socket");
-
+        system("leaks ircserv");
         if (_pollfds[0].revents & POLLIN) {
             std::cout << "New Client Connected" << std::endl;
             acceptClient();
@@ -79,6 +85,8 @@ void Server::runServer(){
             client = GetClient(_pollfds[i].fd);
             if (client->checkSendMessage())
                 _pollfds[i].events |= POLLOUT;
+
+            // if ((_pollfds[i]))
             if ((_pollfds[i].revents & POLLIN)) {
                 HandleInput(*client);
             }

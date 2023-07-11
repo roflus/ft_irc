@@ -14,6 +14,7 @@ private:
     std::string             _password;
     bool                    _inviteOnly;
     bool                    _topicIsForMod;
+    int                     _userLimit;
     std::vector<Client *>   _users;
     std::vector<Client *>   _moderators;
     std::vector<Client *>   _invitedClients;
@@ -38,15 +39,18 @@ public:
 
 
     void    setTopic(std::string topic);
+    void    setPassword(std::string password);
     void    setInviteOnly(bool invite);
     void    setTopicIsForMod(bool topic);
-    void    setPassword(std::string password);
+    void    setUserLimit(int limit);
 
-    std::string                 getName();
-    std::string                 &getTopic();
-    std::string                 getPassword();
-    bool                        getInviteOnly();
-    bool                        getTopicIsForMod();
+    std::string getName();
+    std::string &getTopic();
+    std::string getPassword();
+    bool        getInviteOnly();
+    bool        getTopicIsForMod();  
+    int         getUserLimit();
+    size_t      getUsersCount();        
 
 
 };

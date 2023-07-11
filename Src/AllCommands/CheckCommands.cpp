@@ -16,6 +16,11 @@ CheckCommands::CheckCommands(Server &server) : _server(server)
 
 CheckCommands::~CheckCommands()
 {
+    for (std::map<std::string, Commands *>::iterator it = _commands.begin(); it != _commands.end(); ++it)
+    {
+        delete it->second;
+    }
+
 }
 
 Commands*   CheckCommands::getCommand(std::string &command) const{
