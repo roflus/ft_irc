@@ -10,6 +10,10 @@ Join::~Join()
 
 void  Join::execute(Client &client)
 {
+    if (!client.getRegistrated()) {
+        client.setErrorMessage("You need to register first.\n");
+        return;
+    }
     Channel *channel;
     std::string channelName(client.getKey());
     bool isNewChannel;

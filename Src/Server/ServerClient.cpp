@@ -40,3 +40,24 @@ void Server::acceptClient() {
     std::string message = "Welcome! Give NICKname and PASSword\n";
     send(client->getSocket(), message.c_str(), message.size(), 0);
 }
+
+void    Server::removeClient(Client *client) {
+    /*
+        Client uit de pollfd halen.
+        Client out lijst halen in server.
+        Door lijst channels heen gaan en checken voor de client.
+        zit client erin, remove client.
+    */
+
+    for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it){
+        if (it->fd == client->getSocket())
+            _pollfds.erase(it);
+    }
+    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+        if (it->first == client->getSocket())
+            _clients.erase(it);
+    }
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
+        it->second->removeUser(*client);
+    }
+}

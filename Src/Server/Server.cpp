@@ -86,7 +86,9 @@ void Server::runServer(){
             if (client->checkSendMessage())
                 _pollfds[i].events |= POLLOUT;
 
-            // if ((_pollfds[i]))
+            if ((_pollfds[i]).revents & POLLHUP) {
+                removeClient(client);
+            }
             if ((_pollfds[i].revents & POLLIN)) {
                 HandleInput(*client);
             }
@@ -110,21 +112,11 @@ void Server::receiveMessages(Client &client){
     }
 }
 
-bool Server::HandleData(Client &client) {
-
-    // ?? bool functie weet ik nog niet zeker?
-    if (client.HandleBuffer())
-        return true;
-    return false;
-    // client.Handlebuffer
-    // in handle buffer recv()
-    // dan checken en dan overzetten in de string buffer van client
-    // dan kunnen we in recievemessage voor nu uitprinten vanuit de client
-}
-
 void    Server::HandleInput(Client &client) {
-    if (!HandleData(client))
-        throw ServerException("Cant handle data");
+    if (!client.HandleBuffer()) {
+        removeClient(&client);
+        return ;
+    }
     receiveMessages(client);
     _checkCommands->findCommand(client);
 }

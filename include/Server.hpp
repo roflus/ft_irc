@@ -41,20 +41,12 @@ class Server {
     public:
         Server(const std::string &port, const std::string &password);
         ~Server();
-        /*
-            GetUser
-            AddUser
-            RemoveUser
 
-            GetChannel
-            AddChannel
-            RemoveChannel
-        */
         Client* getClientNickname(std::string nickname);
+        void    removeClient(Client *client);
 
         Client* GetClient(int fd);
         void    AddClient(int fd);
-        void    RemoveClient(int fd);
 
         Channel* getChannel(std::string channelName);
         Channel* AddChannel(std::string channelName);

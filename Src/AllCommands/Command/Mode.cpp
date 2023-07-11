@@ -77,6 +77,10 @@ void Mode::accessChannel(Client &client, std::string target)
 
 void Mode::execute(Client &client)
 {
+    if (!client.getRegistrated()) {
+        client.setErrorMessage("You need to register first.\n");
+        return;
+    }
     std::string target(client.getKey());
     if (target[0] == '#')
     {

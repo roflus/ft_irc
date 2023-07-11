@@ -34,6 +34,10 @@ void   Privmsg::messageChannel(Client &client, std::string &target) {
 }
 
 void    Privmsg::execute(Client &client){
+    if (!client.getRegistrated()) {
+        client.setErrorMessage("You need to register first.\n");
+        return;
+    }
     // Check of Channel of Client
     // channel is met # username is zonder
     std::string target(client.getKey());

@@ -10,6 +10,10 @@ Kick::~Kick()
 
 void Kick::execute(Client &client)
 {
+    if (!client.getRegistrated()) {
+        client.setErrorMessage("You need to register first.\n");
+        return;
+    }
     /*
         Takes 3 arguments, 1 optional
         first argument is the channel

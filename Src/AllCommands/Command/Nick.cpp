@@ -1,12 +1,8 @@
 #include "../../../include/Commands.hpp"
 
-Nick::Nick(Server& server) : Commands(server)
-{
-}
+Nick::Nick(Server& server) : Commands(server) {}
 
-Nick::~Nick()
-{
-}
+Nick::~Nick() {}
 
 void  Nick::execute(Client &client)
 {
@@ -17,10 +13,7 @@ void  Nick::execute(Client &client)
         client.setErrorMessage("Nickname cannot start with a '#'.\n");
         return ;
     }
-    std::cout << "std::string: " << nickname << std::endl;
-    std::cout << "Client nickname was: " << client.getNickname() << std::endl;
     client.setNickname(nickname);
     std::string message = "Your new nickname is: " + client.getNickname() +".\n";
     client.setSendMessage("SYSTEM", "", message);
-    std::cout << "New Nickname is : " << client.getNickname() << std::endl;
 } 

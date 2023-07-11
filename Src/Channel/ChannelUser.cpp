@@ -19,7 +19,9 @@ void Channel::removeUser(Client& client) {
         std::vector<Client*>::iterator it;
         for (it = _users.begin(); it != _users.end(); ) {
             if (*it == &client) {
+                std::string message = client.getNickname() + " has left the channel.\n";
                 it = _users.erase(it);
+                sendMessageToUsers(message, "");
             } else {
                 ++it;
             }

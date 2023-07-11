@@ -31,15 +31,20 @@ void  CheckCommands::enterServer(Client &client) {
     //Should make check for Pass | NICK Heeft nog een argument nodig
     
     std::string key = client.getKey();
-    if (key == "NICK" || key == "PASS"){
+    if (key == "NICK" || key == "PASS" || key == "USER"){
         executeCommand(client, key);
-        if (client.getNickname() != "") 
+    }
+    if (client.getNickname() != "" && client.getPassword() != "" && client.getUsername() != "") {
+        if (client.getPassword() == _server.getPassword())
             client.setRegistrated(true);
+        else {
+            client.setErrorMessage("Wrong password.\n");
+        }
     }
     else if (key == "QUIT")
         executeCommand(client, key);
     else {
-        std::string message = "CHOOSE NICK, PASS OR QUIT\n";
+        std::string message = "CHOOSE NICK, PASS, USER OR QUIT\n";
         send(client.getSocket(), message.c_str(), message.size(), 0);
     }
 }
