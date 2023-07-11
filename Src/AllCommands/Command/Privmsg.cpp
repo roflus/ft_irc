@@ -14,7 +14,7 @@ void    Privmsg::messageClient(Client &client, std::string &target){
         targetClient->setSendMessage(client.getNickname(), "", client.getMessage(true));
     }
     else 
-        client.setErrorMessage("User is not available, try again\n");
+        client.setErrorMessage("User is not available, try again.\n");
 }
 
 void   Privmsg::messageChannel(Client &client, std::string &target) {
@@ -28,16 +28,12 @@ void   Privmsg::messageChannel(Client &client, std::string &target) {
         if (!message.empty())
             targetChannel->sendMessageToUsers(message, client.getNickname());
     } else {
-        std::string error = "You are not in channel " + target + "\n";
+        std::string error = "You are not in channel " + target + ".\n";
         client.setErrorMessage(error);
     }
 }
 
 void    Privmsg::execute(Client &client){
-    if (!client.getRegistrated()) {
-        client.setErrorMessage("You need to register first.\n");
-        return;
-    }
     // Check of Channel of Client
     // channel is met # username is zonder
     std::string target(client.getKey());

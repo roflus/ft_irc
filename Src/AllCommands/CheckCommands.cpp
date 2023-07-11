@@ -7,7 +7,7 @@ CheckCommands::CheckCommands(Server &server) : _server(server)
     this->_commands["KICK"] = new Kick(this->_server);
     this->_commands["MODE"] = new Mode(this->_server);
     this->_commands["NICK"] = new Nick(this->_server);
-    this->_commands["PASS"] = new Quit(this->_server);
+    this->_commands["PASS"] = new Pass(this->_server);
     this->_commands["PRIVMSG"] = new Privmsg(this->_server);
     this->_commands["QUIT"] = new Quit(this->_server);
     this->_commands["TOPIC"] = new Topic(this->_server);

@@ -10,20 +10,16 @@ Invite::~Invite()
 
 void  Invite::execute(Client &client)
 {
-    if (!client.getRegistrated()) {
-        client.setErrorMessage("You need to register first.\n");
-        return;
-    }
     std::string channelName = client.getKey();
     Channel *targetChannel = _server.getChannel(channelName);
     if (!targetChannel) {
-        client.setErrorMessage("Channel not found");
+        client.setErrorMessage("Channel not found.\n");
         return ;
     }
     std::string clientName = client.getKey();
     Client *targetClient = _server.getClientNickname(clientName);
     if (!targetClient) {
-        client.setErrorMessage("Client not found");
+        client.setErrorMessage("Client not found.\n");
         return ;
     }
     if (targetChannel->isUserModerator(client)) {
@@ -37,7 +33,7 @@ void  Invite::execute(Client &client)
             if (!targetChannel->isUserInChannel(*targetClient))
             {
                 targetChannel->addInvitedClient(*targetClient);
-                std::string message = "You are nou invited to: " + targetChannel->getName() + ". Use JOIN to join the channel you are invited to.";
+                std::string message = "You are nou invited to: " + targetChannel->getName() + ". Use JOIN to join the channel you are invited to.\n";
                 targetClient->setSendMessage("SYSTEM", "", message);
                 /* 
                     add to list of invited people?
@@ -46,7 +42,7 @@ void  Invite::execute(Client &client)
                 */
             }
         } else
-            client.setErrorMessage("Cant invite in this channel");
+            client.setErrorMessage("Cant invite in this channel.\n");
     } else 
-        client.setErrorMessage("You are not moderator in this channel\n");
+        client.setErrorMessage("You are not moderator in this channel.\n");
 } 

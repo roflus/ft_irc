@@ -10,10 +10,6 @@ Kick::~Kick()
 
 void Kick::execute(Client &client)
 {
-    if (!client.getRegistrated()) {
-        client.setErrorMessage("You need to register first.\n");
-        return;
-    }
     /*
         Takes 3 arguments, 1 optional
         first argument is the channel
@@ -30,14 +26,14 @@ void Kick::execute(Client &client)
     std::string channelName(client.getKey());
     targetChannel = _server.getChannel(channelName);
     if (!targetChannel) {
-        client.setErrorMessage("Channel does not exist\n");
+        client.setErrorMessage("Channel does not exist.\n");
         return;
     }
     Client *targetClient;
     std::string clientName(client.getKey());
     targetClient = _server.getClientNickname(clientName);
     if (!targetClient) {
-        client.setErrorMessage("User does not exist\n");
+        client.setErrorMessage("User does not exist.\n");
         return;
     }
     if (targetChannel->isUserInChannel(client)) {
@@ -50,21 +46,21 @@ void Kick::execute(Client &client)
                 std::string reason = client.getMessage(true);
                 std::string message;
                 if (reason.empty()) {
-                    targetClient->setSendMessage("SYSTEM", channelName, "You have been kicked from channel by: " + client.getNickname() + "\n");
-                    message = clientName + " has been removed from group\n";
+                    targetClient->setSendMessage("SYSTEM", channelName, "You have been kicked from channel by: " + client.getNickname() + ".\n");
+                    message = clientName + " has been removed from group.\n";
                 }
                 else {
-                    targetClient->setSendMessage("SYSTEM", channelName, "You have been kicked from channel by: " + client.getNickname() + " " + reason);
-                    message = clientName + " has been removed from group: " + reason;
+                    targetClient->setSendMessage("SYSTEM", channelName, "You have been kicked from channel by: " + client.getNickname() + " " + reason + ".\n");
+                    message = clientName + " has been removed from group: " + reason + ".\n";
                 }
                 targetChannel->sendMessageToUsers(message, "SYSTEM");
             } else {
-                client.setErrorMessage("This user is not in this channel\n");
+                client.setErrorMessage("This user is not in this channel.\n");
             }
         } else {
-            client.setErrorMessage("You must be a moderator in this channel to kick someone\n");
+            client.setErrorMessage("You must be a moderator in this channel to kick someone.\n");
         }
     } else {
-        client.setErrorMessage("You are not in this channel\n");
+        client.setErrorMessage("You are not in this channel.\n");
     }
 }

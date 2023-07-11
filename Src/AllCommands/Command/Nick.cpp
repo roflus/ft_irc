@@ -10,10 +10,22 @@ void  Nick::execute(Client &client)
     // Username mag dan ook niet beginne met #
     std::string nickname(client.getKey());
     if (nickname[0] == '#') {
-        client.setErrorMessage("Nickname cannot start with a '#'.\n");
+        if (client.getRegistrated()) {
+            client.setErrorMessage("Password cannot be empty.\n");
+        }
+        else {
+            std::string message = "Password cannot be empty.\n";
+            send(client.getSocket(), message.c_str(), message.size(), 0);
+        }
         return ;
     }
     client.setNickname(nickname);
-    std::string message = "Your new nickname is: " + client.getNickname() +".\n";
-    client.setSendMessage("SYSTEM", "", message);
+    if (client.getRegistrated()) {
+        std::string message = "Your new nickname is: " + client.getNickname() +".\n";
+        client.setSendMessage("SYSTEM", "", message);
+    }
+    else {
+        std::string message = "Your new nickname is: " + client.getNickname() +".\n";
+        send(client.getSocket(), message.c_str(), message.size(), 0);
+    }
 } 

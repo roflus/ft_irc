@@ -10,10 +10,6 @@ Topic::~Topic()
 
 void  Topic::execute(Client &client)
 {
-    if (!client.getRegistrated()) {
-        client.setErrorMessage("You need to register first.\n");
-        return;
-    }
     std::string channelName(client.getKey());
     Channel *channel;
     channel = _server.getChannel(channelName);
@@ -28,7 +24,7 @@ void  Topic::execute(Client &client)
                 if (channel->isUserModerator(client)) {
                     channel->setTopic(client.getMessage(false));
                 } else {
-                    std::string message = "Topic can only be set by Moderators";
+                    std::string message = "Topic can only be set by Moderators.\n";
                     client.setSendMessage("SYSTEM", channelName, message);
                     return ;
                 }
