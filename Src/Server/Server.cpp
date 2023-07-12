@@ -12,7 +12,6 @@ Server::Server(const std::string &port, const std::string &password) :
 
 Server::~Server() {
     delete _checkCommands;
-   
     for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++){
         delete it->second;
     }
@@ -131,7 +130,7 @@ void    Server::ReviewPoll() {
         std::vector<pollfd>::iterator it = _pollfds.begin() + 1;
         while (it != _pollfds.end()) {
             client = GetClient(it->fd);
-            if (!client->checkSendMessage())
+            if (!client->checkSendMessage() && client->getRegistrated() == true)
                 it->events |= POLLOUT;
             ++it;
         }

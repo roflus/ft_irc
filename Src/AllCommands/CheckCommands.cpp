@@ -25,34 +25,42 @@ Commands*   CheckCommands::getCommand(std::string &command) const {
 void  CheckCommands::enterServer(Client &client) {
     //Should make check for Pass | NICK Heeft nog een argument nodig
     std::string key = client.getKey();
-    if (key == "PASS" || key == "USER"){
+    std::string message;
+    if (key == "PASS" || key == "USER" || key == "NICK"){
         executeCommand(client, key);
     }
-    if (client.getNickname() != "" && client.getPassword() != "" && client.getUsername() != "") {
+    else {
+        message = "CHOOSE PASS, NICK, USER OR QUIT\n";
+        send(client.getSocket(), message.c_str(), message.size(), 0);
+    }
+    if (key == "PASS") {
         if (client.getPassword() == _server.getPassword())
+            message = "SYSTEM: Password is correct\n";
+        else
+            message = "SYSTEM: Wrong password.\n";
+        send(client.getSocket(), message.c_str(), message.size(), 0);
+    }
+
+    if (client.getNickname() != "" && client.getUsername() != "") {
+        if (client.getPassword() == _server.getPassword()) {
             client.setRegistrated(true);
-        else {
-            client.setErrorMessage("Wrong password.\n");
+            message = "SYSTEM: WELCOME TO OUR SERVER.\n";
+            send(client.getSocket(), message.c_str(), message.size(), 0);
         }
     }
     else if (key == "QUIT")
         executeCommand(client, key);
-    else {
-        std::string message = "CHOOSE PASS, USER OR QUIT\n";
-        send(client.getSocket(), message.c_str(), message.size(), 0);
-    }
 }
 
 void  CheckCommands::findCommand(Client &client) {
-    if (client.getRegistrated() == false) {
+    if (client.getRegistrated() == false)
         enterServer(client);
-    }
     else {
         std::string key = client.getKey();
         std::map<std::string, Commands*>::iterator iter = _commands.find(key);
         if (iter != _commands.end())
             executeCommand(client, key);
-        else 
+        else
             client.setErrorMessage("Start with a valid Command\n");
     }
 } 

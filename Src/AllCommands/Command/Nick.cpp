@@ -6,23 +6,33 @@ Nick::~Nick() {}
 
 void  Nick::execute(Client &client) {
     std::string nickname(client.getKey());
-    if (nickname[0] == '#') {
+    std::string message;
+    if (nickname.empty()) {
+        if (client.getRegistrated()) {
+            client.setErrorMessage("Nickname cannot be empty.\n");
+        }
+        else {
+            message = "SYSTEM: Nickname cannot be empty.\n";
+            send(client.getSocket(), message.c_str(), message.size(), 0);
+        }
+    return ;
+    }
+    else if (nickname[0] == '#') {
         if (client.getRegistrated()) {
             client.setErrorMessage("Password cannot be empty.\n");
         }
         else {
-            std::string message = "Password cannot be empty.\n";
+            message = "SYSTEM: Password cannot be empty.\n";
             send(client.getSocket(), message.c_str(), message.size(), 0);
         }
         return ;
     }
     client.setNickname(nickname);
-    if (client.getRegistrated()) {
-        std::string message = "Your new nickname is: " + client.getNickname() +".\n";
-        client.setSendMessage("SYSTEM", "", message);
-    }
+    if (client.getRegistrated())
+        client.setSendMessage("SYSTEM", "", "Your new nickname is: " + \
+                                client.getNickname() +".\n");
     else {
-        std::string message = "Your new nickname is: " + client.getNickname() +".\n";
+        message = "SYSTEM: Your new nickname is: " + client.getNickname() +".\n";
         send(client.getSocket(), message.c_str(), message.size(), 0);
     }
 } 

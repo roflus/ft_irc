@@ -11,10 +11,10 @@ void  Pass::execute(Client &client) {
             client.setErrorMessage("Password cannot be empty.\n");
         }
         else {
-            std::string message = "Password cannot be empty.\n";
+            std::string message = "SYSTEM: Password cannot be empty.\n";
             send(client.getSocket(), message.c_str(), message.size(), 0);
         }
         return ;
     }
     client.setPassword(password);
-} 
+}
