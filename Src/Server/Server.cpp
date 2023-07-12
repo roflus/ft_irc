@@ -69,7 +69,7 @@ void Server::runServer() {
         // Use poll to wait for activity on any of the connected sockets
         if (poll(_pollfds.data(), _pollfds.size(), -1) == -1)
             throw ServerException("Failed to listen server socket");
-        system("leaks ircserv");
+        //system("leaks ircserv");
         if (_pollfds[0].revents & POLLIN) {
             std::cout << "New Client Connected" << std::endl;
             acceptClient();
