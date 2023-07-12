@@ -20,11 +20,10 @@ void    Channel::removeModerator(Client& client) {
     if (isUserInChannel(client)) {
         std::vector<Client*>::iterator it;
         for (it = _moderators.begin(); it != _moderators.end(); ) {
-            if (*it == &client) {
+            if (*it == &client)
                 it = _moderators.erase(it);
-            } else {
+            else
                 ++it;
-            }
         }
     }
 }
@@ -42,7 +41,6 @@ void    Channel::changeModerator(Client &client, Client &targetClient) {
             client.setSendMessage("SYSTEM", _name, "You have made " + targetClient.getNickname() + " moderator in this channel\n");
         }
     }
-    else {    
+    else  
         client.setSendMessage("SYSTEM", _name, "User is not in Channel");
-    }
 }

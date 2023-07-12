@@ -1,15 +1,10 @@
 #include "../../../include/Commands.hpp"
 
-Pass::Pass(Server& server) : Commands(server)
-{
-}
+Pass::Pass(Server& server) : Commands(server) {}
 
-Pass::~Pass()
-{
-}
+Pass::~Pass() {}
 
-void  Pass::execute(Client &client)
-{
+void  Pass::execute(Client &client) {
     std::string password = client.getKey();
     if (password.empty()) {
         if (client.getRegistrated()) {

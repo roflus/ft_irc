@@ -1,14 +1,10 @@
 #include "../../../include/Commands.hpp"
 
-Privmsg::Privmsg(Server& server) : Commands(server)
-{
-}
+Privmsg::Privmsg(Server& server) : Commands(server) {}
 
-Privmsg::~Privmsg()
-{
-}
+Privmsg::~Privmsg() {}
 
-void    Privmsg::messageClient(Client &client, std::string &target){
+void    Privmsg::messageClient(Client &client, std::string &target) {
     Client *targetClient = _server.getClientNickname(target);
     if (targetClient != NULL) {
         targetClient->setSendMessage(client.getNickname(), "", client.getMessage(true));
@@ -22,8 +18,7 @@ void   Privmsg::messageChannel(Client &client, std::string &target) {
     targetChannel = _server.getChannel(target);
     if (!targetChannel)
         return;
-    if (targetChannel->isUserInChannel(client))
-    {
+    if (targetChannel->isUserInChannel(client)) {
         std::string message = client.getMessage(true);
         if (!message.empty())
             targetChannel->sendMessageToUsers(message, client.getNickname());
@@ -33,9 +28,7 @@ void   Privmsg::messageChannel(Client &client, std::string &target) {
     }
 }
 
-void    Privmsg::execute(Client &client){
-    // Check of Channel of Client
-    // channel is met # username is zonder
+void    Privmsg::execute(Client &client) {
     std::string target(client.getKey());
     if (target[0] == '#') {
         messageChannel(client, target);

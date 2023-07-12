@@ -4,10 +4,7 @@ Nick::Nick(Server& server) : Commands(server) {}
 
 Nick::~Nick() {}
 
-void  Nick::execute(Client &client)
-{
-    // NICKNAME NU NOG ZONDER SPATIE
-    // Username mag dan ook niet beginne met #
+void  Nick::execute(Client &client) {
     std::string nickname(client.getKey());
     if (nickname[0] == '#') {
         if (client.getRegistrated()) {

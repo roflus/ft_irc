@@ -1,20 +1,14 @@
 #include "../../../include/Commands.hpp"
 
-Mode::Mode(Server &server) : Commands(server)
-{
-}
+Mode::Mode(Server &server) : Commands(server) {}
 
-Mode::~Mode()
-{
-}
+Mode::~Mode() {}
 
-void Mode::accessChannel(Client &client, std::string target)
-{
-    client.setSendMessage("SYSTEM", "", "MODE TEST WORKING.\n");
+void Mode::accessChannel(Client &client, std::string target) {
     Channel *targetChannel;
     targetChannel = _server.getChannel(target);
     std::string flag(client.getKey());
-    if (flag.size() == 2){
+    if (flag.size() == 2) {
         if (flag[0] == '+') {
             if (flag[1] == 'i')
                 targetChannel->setInviteOnly(true);
@@ -75,11 +69,9 @@ void Mode::accessChannel(Client &client, std::string target)
         client.setErrorMessage("Select the right flag.\n");
 }
 
-void Mode::execute(Client &client)
-{
+void Mode::execute(Client &client) {
     std::string target(client.getKey());
-    if (target[0] == '#')
-    {
+    if (target[0] == '#') {
         Channel *targetChannel;
         targetChannel = _server.getChannel(target);
         if (!targetChannel) {

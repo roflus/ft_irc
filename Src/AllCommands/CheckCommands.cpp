@@ -1,7 +1,6 @@
 #include "../../include/CheckCommands.hpp"
 
-CheckCommands::CheckCommands(Server &server) : _server(server)
-{
+CheckCommands::CheckCommands(Server &server) : _server(server) {
     this->_commands["INVITE"] = new Invite(this->_server);
     this->_commands["JOIN"] = new Join(this->_server);
     this->_commands["KICK"] = new Kick(this->_server);
@@ -14,24 +13,19 @@ CheckCommands::CheckCommands(Server &server) : _server(server)
     this->_commands["USER"] = new User(this->_server);
 }
 
-CheckCommands::~CheckCommands()
-{
+CheckCommands::~CheckCommands() {
     for (std::map<std::string, Commands *>::iterator it = _commands.begin(); it != _commands.end(); ++it)
-    {
         delete it->second;
-    }
-
 }
 
-Commands*   CheckCommands::getCommand(std::string &command) const{
+Commands*   CheckCommands::getCommand(std::string &command) const {
     return this->_commands.at(command);
 }
 
 void  CheckCommands::enterServer(Client &client) {
     //Should make check for Pass | NICK Heeft nog een argument nodig
-    
     std::string key = client.getKey();
-    if (key == "NICK" || key == "PASS" || key == "USER"){
+    if (key == "PASS" || key == "USER"){
         executeCommand(client, key);
     }
     if (client.getNickname() != "" && client.getPassword() != "" && client.getUsername() != "") {
@@ -44,13 +38,12 @@ void  CheckCommands::enterServer(Client &client) {
     else if (key == "QUIT")
         executeCommand(client, key);
     else {
-        std::string message = "CHOOSE NICK, PASS, USER OR QUIT\n";
+        std::string message = "CHOOSE PASS, USER OR QUIT\n";
         send(client.getSocket(), message.c_str(), message.size(), 0);
     }
 }
 
-void  CheckCommands::findCommand(Client &client)
-{
+void  CheckCommands::findCommand(Client &client) {
     if (client.getRegistrated() == false) {
         enterServer(client);
     }

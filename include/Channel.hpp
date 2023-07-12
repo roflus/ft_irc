@@ -23,26 +23,26 @@ public:
     Channel(std::string name);
     ~Channel();
 
-    bool    isUserInChannel(Client &client);
-    bool    isUserModerator(Client &client);
-    bool    isUserInvited(Client &client);
+    bool        isUserInChannel(Client &client);
+    bool        isUserModerator(Client &client);
+    bool        isUserInvited(Client &client);
 
-    void    addUser(Client &client);
-    void    addModerator(Client &client);
-    void    removeModerator(Client &Client);
-    void    removeUser(Client &client);
-    void    changeModerator(Client &client, Client &targetClient);
-    void    addInvitedClient(Client &client);
-    void    removeInvitedClient(Client &client);
+    void        addUser(Client &client);
+    void        addModerator(Client &client);
+    void        removeModerator(Client &Client);
+    void        removeUser(Client &client);
+    void        changeModerator(Client &client, Client &targetClient);
+    void        addInvitedClient(Client &client);
+    void        removeInvitedClient(Client &client);
 
-    void    sendMessageToUsers(std::string message, std::string nickname);
+    void        sendMessageToUsers(std::string message, std::string nickname);
 
 
-    void    setTopic(std::string topic);
-    void    setPassword(std::string password);
-    void    setInviteOnly(bool invite);
-    void    setTopicIsForMod(bool topic);
-    void    setUserLimit(int limit);
+    void        setTopic(std::string topic);
+    void        setPassword(std::string password);
+    void        setInviteOnly(bool invite);
+    void        setTopicIsForMod(bool topic);
+    void        setUserLimit(int limit);
 
     std::string getName();
     std::string &getTopic();
@@ -51,8 +51,6 @@ public:
     bool        getTopicIsForMod();  
     int         getUserLimit();
     size_t      getUsersCount();        
-
-
 };
 
 #endif

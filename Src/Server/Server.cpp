@@ -31,7 +31,7 @@ void Server::stopServer() {
     }
 
     // Close all client sockets
-    for (std::vector<pollfd>::iterator it =_pollfds.begin(); it != _pollfds.end(); ++it){
+    for (std::vector<pollfd>::iterator it =_pollfds.begin(); it != _pollfds.end(); ++it) {
         if (it->fd >= 0)
             close(it->fd);
     }
@@ -70,7 +70,7 @@ void Server::startServer() {
     return;
 }
 
-void Server::runServer(){
+void Server::runServer() {
     Client *client;
     while (true) {
         // Use poll to wait for activity on any of the connected sockets
@@ -81,20 +81,19 @@ void Server::runServer(){
             std::cout << "New Client Connected" << std::endl;
             acceptClient();
         }
-        for (int i = 1; i <= _clients.size(); ++i){
+        for (int i = 1; i <= _clients.size(); ++i) {
             client = GetClient(_pollfds[i].fd);
-            if (client->checkSendMessage())
+            if (client->checkSendMessage() && client->getRegistrated() == true)
                 _pollfds[i].events |= POLLOUT;
 
-            if ((_pollfds[i]).revents & POLLHUP) {
+            if ((_pollfds[i]).revents & POLLHUP)
                 removeClient(client);
-            }
-            if ((_pollfds[i].revents & POLLIN)) {
+
+            if ((_pollfds[i].revents & POLLIN))
                 HandleInput(*client);
-            }
-            if ((_pollfds[i].revents & POLLOUT) && client->checkSendMessage()) {
+
+            if ((_pollfds[i].revents & POLLOUT) && client->checkSendMessage())
                 HandleOutput(*client, i);
-            }
         }
         ReviewPoll();
     }
@@ -102,14 +101,12 @@ void Server::runServer(){
     return ;
 }
 
-void Server::receiveMessages(Client &client){
+void Server::receiveMessages(Client &client) {
     // Check for activity on the client sockets (incoming data)
     std::map<int, Client*>::iterator it = _clients.find(client.getSocket());
     if (it != _clients.end())
-    {
         std::cout << "Received message from " << it->second->getNickname() \
             << std::endl << it->second->getBuffer() << std::endl;
-    }
 }
 
 void    Server::HandleInput(Client &client) {
@@ -129,41 +126,23 @@ void    Server::HandleOutput(Client &client, int i) {
         _pollfds[i].events &= ~POLLOUT;
 }
 
-void    Server::ReviewPoll(){
+void    Server::ReviewPoll() {
         Client *client;
         std::vector<pollfd>::iterator it = _pollfds.begin() + 1;
-        while (it != _pollfds.end()){
+        while (it != _pollfds.end()) {
             client = GetClient(it->fd);
             if (!client->checkSendMessage())
                 it->events |= POLLOUT;
             ++it;
         }
         it = this->_pollfds.begin() + 1;
-		while (it != this->_pollfds.end())
-		{
+		while (it != this->_pollfds.end()) {
 			if (!it->events)
 				it = this->_pollfds.erase(it);
 			else
 				it++;
 		}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // void Server::disconnectClient(int index){
 //     int currentSocket = _pollfds[index].fd;
 //     // Client has closed the connection or an error occurred

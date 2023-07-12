@@ -1,15 +1,10 @@
 #include "../../../include/Commands.hpp"
 
-Quit::Quit(Server& server) : Commands(server)
-{
-}
+Quit::Quit(Server& server) : Commands(server) {}
 
-Quit::~Quit()
-{
-}
+Quit::~Quit() {}
 
-void  Quit::execute(Client &client)
-{
+void  Quit::execute(Client &client) {
     /*
         _server.disconect client;
         opzoek welke client, en welk fd

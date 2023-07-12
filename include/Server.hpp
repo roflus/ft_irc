@@ -42,26 +42,25 @@ class Server {
         Server(const std::string &port, const std::string &password);
         ~Server();
 
-        Client* getClientNickname(std::string nickname);
-        void    removeClient(Client *client);
+        Client*                         getClientNickname(std::string nickname);
+        void                            removeClient(Client *client);
 
-        Client* GetClient(int fd);
-        void    AddClient(int fd);
+        Client*                         GetClient(int fd);
+        void                            AddClient(int fd);
 
-        Channel* getChannel(std::string channelName);
-        Channel* AddChannel(std::string channelName);
-        void     RemoveChannel(std::string channelName);
+        Channel*                        getChannel(std::string channelName);
+        Channel*                        AddChannel(std::string channelName);
+        void                            RemoveChannel(std::string channelName);
 
-        std::string getPassword();
-        
-        in_port_t GetPort();
-        bool      CheckPassword();
+        std::string                     getPassword();
+        bool                            CheckPassword();
 
-        bool    HandleData(Client &client);
+        in_port_t                       GetPort();
 
-        void    HandleInput(Client &client);
-        void    HandleOutput(Client &client, int i);
-        void    ReviewPoll();
+        bool                            HandleData(Client &client);
+        void                            HandleInput(Client &client);
+        void                            HandleOutput(Client &client, int i);
+        void                            ReviewPoll();
 
         /* custom exeption maybe toch wel een namespace gebruiken dan kun je deze exception overal gebruiken*/
         class ServerException: public std::exception {
@@ -71,13 +70,12 @@ class Server {
                 const char *what() const throw() { return _message; }
         };
 
-        void startServer();
-        void stopServer();
-        // Dit kan nu ook private? Maybe in de toekomst wel nodig in andere files
-        void runServer();
-        void acceptClient();
-        void receiveMessages(Client &client);
-        void disconnectClient(int index);
+        void                            startServer();
+        void                            stopServer();
+        void                            runServer();
+        void                            acceptClient();
+        void                            receiveMessages(Client &client);
+        void                            disconnectClient(int index);
 
 };
 #endif

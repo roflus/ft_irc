@@ -1,15 +1,10 @@
 #include "../../../include/Commands.hpp"
 
-Invite::Invite(Server& server) : Commands(server)
-{
-}
+Invite::Invite(Server& server) : Commands(server) {}
 
-Invite::~Invite()
-{
-}
+Invite::~Invite() {}
 
-void  Invite::execute(Client &client)
-{
+void  Invite::execute(Client &client) {
     std::string channelName = client.getKey();
     Channel *targetChannel = _server.getChannel(channelName);
     if (!targetChannel) {
@@ -30,19 +25,18 @@ void  Invite::execute(Client &client)
                     return ;
                 }
             }
-            if (!targetChannel->isUserInChannel(*targetClient))
-            {
+            if (!targetChannel->isUserInChannel(*targetClient)) {
                 targetChannel->addInvitedClient(*targetClient);
                 std::string message = "You are nou invited to: " + targetChannel->getName() + ". Use JOIN to join the channel you are invited to.\n";
                 targetClient->setSendMessage("SYSTEM", "", message);
-                /* 
-                    add to list of invited people?
-                    send message to user it is invited
-                    they us join to get into channel 
-                */
             }
         } else
             client.setErrorMessage("Cant invite in this channel.\n");
     } else 
         client.setErrorMessage("You are not moderator in this channel.\n");
 } 
+                /* 
+                    add to list of invited people?
+                    send message to user it is invited
+                    they us join to get into channel 
+                */

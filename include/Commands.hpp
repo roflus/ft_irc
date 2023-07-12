@@ -17,10 +17,10 @@ class Commands
 
     public:
         Commands(Server& server);
-        virtual ~Commands();
-        virtual void execute(Client &client) = 0;
+        virtual             ~Commands();
+        virtual void        execute(Client &client) = 0;
 
-        Server&		_server;
+        Server&		        _server;
 };
 
 class Invite : public Commands
@@ -29,7 +29,7 @@ class Invite : public Commands
         Invite(Server& server);
         ~Invite();
 
-        void execute(Client &client);
+        void                execute(Client &client);
 
 };
 
@@ -39,7 +39,7 @@ class Join : public Commands
         Join(Server& server);
         ~Join();
 
-        void execute(Client &client);
+        void                execute(Client &client);
 
 };
 
@@ -49,7 +49,7 @@ class Kick : public Commands
         Kick(Server& server);
         ~Kick();
 
-        void execute(Client &client);
+        void                execute(Client &client);
 
 };
 
@@ -59,8 +59,8 @@ class Mode : public Commands
         Mode(Server& server);
         ~Mode();
 
-        void    execute(Client &client);
-        void    accessChannel(Client &client, std::string target);
+        void                execute(Client &client);
+        void                accessChannel(Client &client, std::string target);
 };
 
 class Nick : public Commands
@@ -69,7 +69,7 @@ class Nick : public Commands
         Nick(Server& server);
         ~Nick();
 
-        void execute(Client &client);
+        void                execute(Client &client);
 
 };
 
@@ -79,7 +79,7 @@ class Pass : public Commands
         Pass(Server& server);
         ~Pass();
 
-        void execute(Client &client);
+        void                execute(Client &client);
 
 };
 
@@ -89,9 +89,9 @@ class Privmsg : public Commands
         Privmsg(Server& server);
         ~Privmsg();
 
-        void    execute(Client &client);
-        void    messageClient(Client &client, std::string &target);
-        void    messageChannel(Client &client, std::string &target);
+        void                execute(Client &client);
+        void                messageClient(Client &client, std::string &target);
+        void                messageChannel(Client &client, std::string &target);
 };
 
 class Quit : public Commands
@@ -100,7 +100,7 @@ class Quit : public Commands
         Quit(Server& server);
         ~Quit();
 
-        void execute(Client &client);
+        void                execute(Client &client);
 
 };
 
@@ -110,7 +110,7 @@ class Topic : public Commands
         Topic(Server& server);
         ~Topic();
 
-        void execute(Client &client);
+        void                execute(Client &client);
 
 };
 
@@ -120,7 +120,7 @@ class User : public Commands
         User(Server& server);
         ~User();
 
-        void execute(Client &client);
+        void                execute(Client &client);
 
 };
 

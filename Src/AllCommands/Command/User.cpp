@@ -1,12 +1,8 @@
 #include "../../../include/Commands.hpp"
 
-User::User(Server& server) : Commands(server)
-{
-}
+User::User(Server& server) : Commands(server) {}
 
-User::~User()
-{
-}
+User::~User() {}
 
 void  User::execute(Client &client)
 {

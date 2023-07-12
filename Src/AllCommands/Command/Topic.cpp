@@ -1,15 +1,10 @@
 #include "../../../include/Commands.hpp"
 
-Topic::Topic(Server& server) : Commands(server)
-{
-}
+Topic::Topic(Server& server) : Commands(server) {}
 
-Topic::~Topic()
-{
-}
+Topic::~Topic() {}
 
-void  Topic::execute(Client &client)
-{
+void  Topic::execute(Client &client) {
     std::string channelName(client.getKey());
     Channel *channel;
     channel = _server.getChannel(channelName);

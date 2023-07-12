@@ -22,17 +22,15 @@ void Channel::removeUser(Client& client) {
                 std::string message = client.getNickname() + " has left the channel.\n";
                 it = _users.erase(it);
                 sendMessageToUsers(message, "");
-            } else {
+            } else
                 ++it;
-            }
         }
     }
 }
 
 bool Channel::isUserInvited(Client &client) {
     std::vector<Client *>::iterator it;
-    for (it = _invitedClients.begin(); it != _invitedClients.end(); it++)
-    {
+    for (it = _invitedClients.begin(); it != _invitedClients.end(); it++) {
         if (*it == &client)
             return true;
     }
@@ -47,8 +45,7 @@ void Channel::addInvitedClient(Client &client) {
 void Channel::removeInvitedClient(Client &client) {
     if (isUserInvited(client)) {
         std::vector<Client *>::iterator it;
-        for (it = _invitedClients.begin(); it != _invitedClients.end();)
-        {
+        for (it = _invitedClients.begin(); it != _invitedClients.end();) {
             if (*it == &client)
                 it = _invitedClients.erase(it);
             else

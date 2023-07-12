@@ -1,15 +1,10 @@
 #include "../../../include/Commands.hpp"
 
-Join::Join(Server& server) : Commands(server)
-{
-}
+Join::Join(Server& server) : Commands(server) {}
 
-Join::~Join()
-{
-}
+Join::~Join() {}
 
-void  Join::execute(Client &client)
-{
+void  Join::execute(Client &client) {
     if (!client.getRegistrated()) {
         std::string message = "You need to register first.\n";
         send(client.getSocket(), message.c_str(), message.size(), 0);
@@ -19,7 +14,7 @@ void  Join::execute(Client &client)
     std::string channelName(client.getKey());
     bool isNewChannel;
 
-    if (channelName[0] != '#'){
+    if (channelName[0] != '#') {
         client.setErrorMessage("Channel name needs to start with a '#'.\n");
         return ;
     }

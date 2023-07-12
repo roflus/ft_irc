@@ -10,7 +10,6 @@ Client *Server::GetClient(int fd) {
 
 Client*	Server::getClientNickname(std::string nickname) {
     // MISSING ERROR CHECKS
-    
     std::map<int, Client*>::iterator it;
 	it = this->_clients.begin();
 	while (it != this->_clients.end())
@@ -42,14 +41,7 @@ void Server::acceptClient() {
 }
 
 void    Server::removeClient(Client *client) {
-    /*
-        Client uit de pollfd halen.
-        Client out lijst halen in server.
-        Door lijst channels heen gaan en checken voor de client.
-        zit client erin, remove client.
-    */
-
-    for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it){
+    for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
         if (it->fd == client->getSocket())
             _pollfds.erase(it);
     }
@@ -61,3 +53,10 @@ void    Server::removeClient(Client *client) {
         it->second->removeUser(*client);
     }
 }
+    /*
+        Client uit de pollfd halen.
+        Client out lijst halen in server.
+        Door lijst channels heen gaan en checken voor de client.
+        zit client erin, remove client.
+    */
+
