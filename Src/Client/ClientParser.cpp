@@ -42,6 +42,7 @@ bool        Client::HandleBuffer() {
     buffer[bytesRead] = '\0';
     this->_buffer += buffer;
     parseBuffer();
+    //memset(buffer, 0, sizeof(buffer));
     return true;
 }
 

@@ -30,8 +30,12 @@ void   Privmsg::messageChannel(Client &client, std::string &target) {
 
 void    Privmsg::execute(Client &client) {
     std::string target(client.getKey());
-    if (target[0] == '#') {
-        messageChannel(client, target);
-    } else 
-        messageClient(client, target);
-} 
+    if (target.empty()) 
+        client.setErrorMessage("Please add Channel and or User.\n");
+    else {
+        if (target[0] == '#') {
+            messageChannel(client, target);
+        } else 
+            messageClient(client, target);
+    }
+}

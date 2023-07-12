@@ -126,21 +126,21 @@ void    Server::HandleOutput(Client &client, int i) {
 }
 
 void    Server::ReviewPoll() {
-        Client *client;
-        std::vector<pollfd>::iterator it = _pollfds.begin() + 1;
-        while (it != _pollfds.end()) {
-            client = GetClient(it->fd);
-            if (!client->checkSendMessage() && client->getRegistrated() == true)
-                it->events |= POLLOUT;
-            ++it;
-        }
-        it = this->_pollfds.begin() + 1;
-		while (it != this->_pollfds.end()) {
-			if (!it->events)
-				it = this->_pollfds.erase(it);
-			else
-				it++;
-		}
+    Client *client;
+    std::vector<pollfd>::iterator it = _pollfds.begin() + 1;
+    while (it != _pollfds.end()) {
+        client = GetClient(it->fd);
+        if (!client->checkSendMessage() && client->getRegistrated() == true)
+            it->events |= POLLOUT;
+        ++it;
+    }
+    it = this->_pollfds.begin() + 1;
+    while (it != this->_pollfds.end()) {
+        if (!it->events)
+            it = this->_pollfds.erase(it);
+        else
+            it++;
+    }
 }
 // void Server::disconnectClient(int index){
 //     int currentSocket = _pollfds[index].fd;
