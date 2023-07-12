@@ -55,12 +55,16 @@ void Server::acceptClient() {
 
 void    Server::removeClient(Client *client) {
     for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
-        if (it->fd == client->getSocket())
+        if (it->fd == client->getSocket()) {
             _pollfds.erase(it);
+            break;
+        }
     }
     for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-        if (it->first == client->getSocket())
+        if (it->first == client->getSocket()) {
             _clients.erase(it);
+            break;
+        }
     }
     for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
         it->second->removeUser(*client);
