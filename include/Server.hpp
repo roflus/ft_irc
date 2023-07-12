@@ -43,6 +43,7 @@ class Server {
         ~Server();
 
         Client*                         getClientNickname(std::string nickname);
+        Client*	                        getClientUsername(std::string username); 
         void                            removeClient(Client *client);
 
         Client*                         GetClient(int fd);

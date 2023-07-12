@@ -21,6 +21,19 @@ Client*	Server::getClientNickname(std::string nickname) {
 	return NULL;
 }
 
+Client*	Server::getClientUsername(std::string username) {
+    // MISSING ERROR CHECKS
+    std::map<int, Client*>::iterator it;
+	it = this->_clients.begin();
+	while (it != this->_clients.end())
+	{
+		if (it->second->getUsername() == username)
+			return it->second;
+		++it;
+	}
+	return NULL;
+}
+
 void Server::acceptClient() {
     /* hier een nieuwe Client class aanmaken de socket naar accept zetten en dan in die map zetten */
     Client *client;

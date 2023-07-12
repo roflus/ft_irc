@@ -6,18 +6,13 @@ Server::Server(const std::string &port, const std::string &password) :
     _password(password),
     _checkCommands(new CheckCommands(*this))
     {}
-    /* Bind listen dus server opstarten kan hier?
-    Maaaar..... dan moeten we dus namespace doen, kan wel ? wat denk jij? is wel BigBrain 
-    voor nu is het nog hetzelfde als eerst */
 
 Server::~Server() {
     delete _checkCommands;
-    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++){
+    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
         delete it->second;
-    }
-    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++) {
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++)
         delete it->second;
-    }
     stopServer();
 }
 
@@ -64,7 +59,6 @@ void Server::startServer() {
     serverPollfd.fd = _serverSocket;
     serverPollfd.events = POLLIN;
     _pollfds.push_back(serverPollfd);
-    // FUNCTION FOR RUNNING SERVER
     runServer();
     return;
 }

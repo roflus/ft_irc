@@ -21,8 +21,22 @@ void  User::execute(Client &client) {
             send(client.getSocket(), message.c_str(), message.size(), 0);
             return ;
         }
-        client.setUsername(username);
-        message = "SYSTEM: Your new user- and nickname is: " + client.getUsername() +".\n";
-        send(client.getSocket(), message.c_str(), message.size(), 0);
+        Client *checkClientname = _server.getClientUsername(username);
+        if (!checkClientname) {
+            checkClientname = _server.getClientNickname(username);
+            if (!checkClientname) {
+                client.setUsername(username);
+                message = "SYSTEM: Your new user- and nickname is: " + client.getUsername() +".\n";
+                send(client.getSocket(), message.c_str(), message.size(), 0);
+            }
+            else {
+                message = "SYSTEM: Another User is using this name as Nickname, Please use another username\n";
+                send(client.getSocket(), message.c_str(), message.size(), 0);   
+            }
+        }
+        else {
+            message = "SYSTEM: Username has been taken.\n";
+            send(client.getSocket(), message.c_str(), message.size(), 0);    
+        }
     }
 }
