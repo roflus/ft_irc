@@ -5,17 +5,12 @@ Join::Join(Server& server) : Commands(server) {}
 Join::~Join() {}
 
 void  Join::execute(Client &client) {
-    if (!client.getRegistrated()) {
-        std::string message = "You need to register first.\n";
-        send(client.getSocket(), message.c_str(), message.size(), 0);
-        return;
-    }
     Channel *channel;
     std::string channelName(client.getKey());
     bool isNewChannel;
 
     if (channelName[0] != '#') {
-        client.setErrorMessage("Channel name needs to start with a '#'.\n");
+        client.setMessage(ERR_NOSUCHCHANNEL(channelName));
         return ;
     }
     channel = _server.getChannel(channelName);
@@ -23,36 +18,32 @@ void  Join::execute(Client &client) {
         isNewChannel = true;
         channel = _server.AddChannel(channelName);
     }
-    if (!channel->isUserInChannel(client) && !channel->getInviteOnly()) {
+    if (!channel->isUserInChannel(client)) {
         if (channel->getUserLimit() > 0) {
             if (channel->getUserLimit() == channel->getUsersCount()) {
-                client.setErrorMessage("Channel is full, cannot join right now.\n");
+                client.setMessage(ERR_CHANNELISFULL(channel->getName()));
                 return ;
             }
         }
-        channel->addUser(client);
-        if (isNewChannel)
-            channel->addModerator(client);
-        std::string message = "You joined channel " + channel->getName() + ".\n";
-        client.setErrorMessage(message);
-
-        message = client.getNickname() + " joined channel.\n";
-        channel->sendMessageToUsers(message, "SYSTEM");
-    }
-    else if (!channel->isUserInChannel(client) && channel->getInviteOnly()) {
-        if (channel->isUserInvited(client)) {
+        if (!channel->getInviteOnly()) {
             channel->addUser(client);
-            channel->removeInvitedClient(client);
-            std::string message = "You joined channel " + channel->getName() + ".\n";
-            client.setSendMessage("SYSTEM", "", message);
-
-            message = client.getNickname() + " joined channel.\n";
-            channel->sendMessageToUsers(message, "SYSTEM");
-        } else
-            client.setErrorMessage("You have to be invited to join this channel.\n");
-    } else 
-        client.setErrorMessage("You are already in this channel.\n");
-} 
+            if (isNewChannel)
+                channel->addModerator(client);
+        }
+        else {
+            if (channel->isUserInvited(client)) {
+                channel->addUser(client);
+                channel->removeInvitedClient(client);
+            } else {
+                client.setMessage(ERR_INVITEONLYCHAN(channel->getName()));
+                return ;
+            }
+        }
+        client.setMessage(MSG_JOIN(client.getNickname(), channel->getName()));
+        channel->sendMessageToUsers(MSG_JOIN(client.getNickname(), channel->getName()));
+    } else
+        client.setMessage(ERR_USERONCHANNEL(client.getNickname(), channel->getName()));
+}
     /*
         Channel name meegeven: start with #
         channel password meegeven als het nodig is. 

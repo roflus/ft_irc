@@ -30,22 +30,19 @@ void  CheckCommands::enterServer(Client &client) {
         executeCommand(client, key);
     }
     else {
-        message = "CHOOSE PASS, NICK, USER OR QUIT\n";
+        message = ": CHOOSE PASS, NICK, USER OR QUIT\n";
         send(client.getSocket(), message.c_str(), message.size(), 0);
     }
     if (key == "PASS") {
-        if (client.getPassword() == _server.getPassword())
-            message = "SYSTEM: Password is correct\n";
-        else
-            message = "SYSTEM: Wrong password.\n";
-        send(client.getSocket(), message.c_str(), message.size(), 0);
+        if (client.getPassword() != _server.getPassword()) {
+            message = ERR_PASSWDMISMATCH(client.getNickname());
+            send(client.getSocket(), message.c_str(), message.size(), 0);
+        }
     }
-
     if (client.getNickname() != "" && client.getUsername() != "") {
         if (client.getPassword() == _server.getPassword()) {
             client.setRegistrated(true);
-            message = "SYSTEM: WELCOME TO OUR SERVER.\n";
-            send(client.getSocket(), message.c_str(), message.size(), 0);
+            client.setMessage(MSG_WELCOME(client.getNickname()));
         }
     }
     else if (key == "QUIT")
@@ -61,7 +58,7 @@ void  CheckCommands::findCommand(Client &client) {
         if (iter != _commands.end())
             executeCommand(client, key);
         else
-            client.setErrorMessage("Start with a valid Command\n");
+            client.setMessage(ERR_UNKNOWNCOMMAND(client.getNickname(), key));
     }
 } 
 

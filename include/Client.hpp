@@ -53,7 +53,7 @@ public:
     void        					setSocket(const int &clientSocket);
     void                            setRegistrated(bool isRegistered);
     void                            setIsModerator(const bool &isModerator);
-
+    void                            setMessage(std::string message);
     bool                            HandleBuffer();
     void                            parseBuffer();
 

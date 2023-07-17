@@ -8,32 +8,32 @@ void  Invite::execute(Client &client) {
     std::string channelName = client.getKey();
     Channel *targetChannel = _server.getChannel(channelName);
     if (!targetChannel) {
-        client.setErrorMessage("Channel not found.\n");
+        client.setMessage(ERR_NOSUCHCHANNEL(channelName));
         return ;
     }
     std::string clientName = client.getKey();
     Client *targetClient = _server.getClientNickname(clientName);
     if (!targetClient) {
-        client.setErrorMessage("Client not found.\n");
+        client.setMessage(ERR_NOSUCHNICK(clientName));
+        return ;
+    }
+    if (!targetChannel->isUserInChannel(client)) {
+        client.setMessage(ERR_NOTONCHANNEL(targetChannel->getName()));
         return ;
     }
     if (targetChannel->isUserModerator(client)) {
-        if (targetChannel->getInviteOnly()) {
-            if (targetChannel->getUserLimit() > 0) {
-                if (targetChannel->getUserLimit() == targetChannel->getUsersCount()) {
-                    client.setErrorMessage("Cannot invite anyone, reached channels userlimit.\n");
-                    return ;
-                }
+        if (targetChannel->getUserLimit() > 0) {
+            if (targetChannel->getUserLimit() == targetChannel->getUsersCount()) {
+                client.setMessage(ERR_CHANNELISFULL(targetChannel->getName()));
+                return ;
             }
-            if (!targetChannel->isUserInChannel(*targetClient)) {
-                targetChannel->addInvitedClient(*targetClient);
-                std::string message = "You are nou invited to: " + targetChannel->getName() + ". Use JOIN to join the channel you are invited to.\n";
-                targetClient->setSendMessage("SYSTEM", "", message);
-            }
-        } else
-            client.setErrorMessage("Cant invite in this channel.\n");
+        }
+        if (!targetChannel->isUserInChannel(*targetClient)) {
+            targetChannel->addInvitedClient(*targetClient);
+            targetClient->setMessage(MSG_INVITING(client.getNickname(), targetClient->getNickname(), targetChannel->getName()));
+        }
     } else 
-        client.setErrorMessage("You are not moderator in this channel.\n");
+        client.setMessage(ERR_CHANOPRIVSNEEDED(targetChannel->getName()));
 } 
                 /* 
                     add to list of invited people?

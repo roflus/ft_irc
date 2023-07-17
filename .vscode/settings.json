@@ -66,6 +66,7 @@
         "deque": "cpp",
         "queue": "cpp",
         "__bits": "cpp",
-        "clocale": "cpp"
+        "clocale": "cpp",
+        "__functional_03": "cpp"
     }
 }

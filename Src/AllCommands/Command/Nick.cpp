@@ -9,35 +9,41 @@ void  Nick::execute(Client &client) {
     std::string message;
     if (nickname.empty()) {
         if (client.getRegistrated()) {
-            client.setErrorMessage("Nickname cannot be empty.\n");
+            client.setMessage(ERR_NONICKNAMEGIVEN(nickname));
         }
         else {
-            message = "SYSTEM: Nickname cannot be empty.\n";
+            message = ERR_NONICKNAMEGIVEN(nickname);
             send(client.getSocket(), message.c_str(), message.size(), 0);
         }
     return ;
     }
     else if (nickname[0] == '#') {
         if (client.getRegistrated()) {
-            client.setErrorMessage("Password cannot be empty.\n");
+            client.setMessage(ERR_ERRONEUSNICKNAME(nickname));
         }
         else {
-            message = "SYSTEM: Password cannot be empty.\n";
+            message = ERR_ERRONEUSNICKNAME(nickname);
             send(client.getSocket(), message.c_str(), message.size(), 0);
         }
         return ;
     }
     Client *checkClientNickname = _server.getClientNickname(nickname);
     if (!checkClientNickname) {
-        client.setNickname(nickname);
         if (client.getRegistrated())
-            client.setSendMessage("SYSTEM", "", "Your new nickname is: " + \
-                                    client.getNickname() +".\n");
+            client.setMessage(MSG_NICK(client.getNickname(), nickname));
         else {
-            message = "SYSTEM: Your new nickname is: " + client.getNickname() +".\n";
+            message = MSG_NICK(client.getNickname(), nickname);
+            send(client.getSocket(), message.c_str(), message.size(), 0);
+        }
+        client.setNickname(nickname);
+    }
+    else {
+        if (client.getRegistrated())
+            client.setMessage(ERR_NICKNAMEINUSE(nickname));
+        else {
+            message = ERR_NICKNAMEINUSE(nickname);
             send(client.getSocket(), message.c_str(), message.size(), 0);
         }
     }
-    else
-        client.setErrorMessage("Nickname is being used by other Client.\n");
+
 } 

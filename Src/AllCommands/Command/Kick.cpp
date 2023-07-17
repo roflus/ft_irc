@@ -9,14 +9,14 @@ void Kick::execute(Client &client) {
     std::string channelName(client.getKey());
     targetChannel = _server.getChannel(channelName);
     if (!targetChannel) {
-        client.setErrorMessage("Channel does not exist.\n");
+        client.setMessage(ERR_NOSUCHCHANNEL(channelName));
         return;
     }
     Client *targetClient;
     std::string clientName(client.getKey());
     targetClient = _server.getClientNickname(clientName);
     if (!targetClient) {
-        client.setErrorMessage("User does not exist.\n");
+        client.setMessage(ERR_NOSUCHNICK(clientName));
         return;
     }
     if (targetChannel->isUserInChannel(client)) {
@@ -27,21 +27,14 @@ void Kick::execute(Client &client) {
                     targetChannel->removeModerator(*targetClient);
                 std::string reason = client.getMessage(true);
                 std::string message;
-                if (reason.empty()) {
-                    targetClient->setSendMessage("SYSTEM", channelName, "You have been kicked from channel by: " + client.getNickname() + ".\n");
-                    message = clientName + " has been removed from group.\n";
-                }
-                else {
-                    targetClient->setSendMessage("SYSTEM", channelName, "You have been kicked from channel by: " + client.getNickname() + " " + reason + ".\n");
-                    message = clientName + " has been removed from group: " + reason + ".\n";
-                }
-                targetChannel->sendMessageToUsers(message, "SYSTEM");
+                targetClient->setMessage(MSG_KICK(client.getNickname(), targetClient->getNickname(), targetChannel->getName(), reason));
+                targetChannel->sendMessageToUsers(MSG_KICK(client.getNickname(), targetClient->getNickname(), targetChannel->getName(), reason));
             } else 
-                client.setErrorMessage("This user is not in this channel.\n");
+                client.setMessage(ERR_USERNOTINCHANNEL(targetClient->getNickname(), targetChannel->getName()));
         } else 
-            client.setErrorMessage("You must be a moderator in this channel to kick someone.\n");
+            client.setMessage(ERR_CHANOPRIVSNEEDED(targetChannel->getName()));
     } else 
-        client.setErrorMessage("You are not in this channel.\n");
+        client.setMessage(ERR_NOTONCHANNEL(targetChannel->getName()));
 }
 
     /*

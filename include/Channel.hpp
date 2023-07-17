@@ -35,7 +35,7 @@ public:
     void        addInvitedClient(Client &client);
     void        removeInvitedClient(Client &client);
 
-    void        sendMessageToUsers(std::string message, std::string nickname);
+    void        sendMessageToUsers(std::string message);
 
 
     void        setTopic(std::string topic);

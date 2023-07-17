@@ -49,7 +49,7 @@ void Server::acceptClient() {
     _pollfds.push_back(clientPollfd);
     
     _clients[client->getSocket()] = client;
-    std::string message = "Welcome! Give USERname and PASSword\n";
+    std::string message = "001 Welcome! Give USERname and PASSword";
     send(client->getSocket(), message.c_str(), message.size(), 0);
 }
 

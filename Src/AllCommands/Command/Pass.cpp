@@ -8,10 +8,10 @@ void  Pass::execute(Client &client) {
     std::string password = client.getKey();
     if (password.empty()) {
         if (client.getRegistrated()) {
-            client.setErrorMessage("Password cannot be empty.\n");
+            client.setMessage(ERR_PASSWDMISMATCH(client.getUsername()));
         }
         else {
-            std::string message = "SYSTEM: Password cannot be empty.\n";
+            std::string message = ERR_PASSWDMISMATCH(client.getUsername());
             send(client.getSocket(), message.c_str(), message.size(), 0);
         }
         return ;

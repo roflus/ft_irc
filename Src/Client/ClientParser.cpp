@@ -59,17 +59,19 @@ std::string Client::getSendMessage(){
     return (message);
 }
 
-void        Client::setSendMessage(const std::string &name, const std::string &channel, \
-                                    const std::string &input){
-    std::string message;
-    if (channel == "")
-        message = name + ": " + input;
-    else
-        message = "Channel: " + channel + " | " + name + \
-                    ": " + input;
-    _sendMessage.push_back(message);
-}
+void    Client::setMessage(std::string message) { _sendMessage.push_back(message); }
 
-void		Client::setErrorMessage(const std::string &error) {
-		setSendMessage("SYSTEM", "", error);
-}
+// void        Client::setSendMessage(const std::string &name, const std::string &channel, \
+//                                     const std::string &input){
+//     std::string message;
+//     if (channel == "")
+//         message = name + ": " + input;
+//     else
+//         message = "Channel: " + channel + " | " + name + \
+//                     ": " + input;
+//     _sendMessage.push_back(message);
+// }
+
+// void		Client::setErrorMessage(const std::string &error) {
+// 		setSendMessage("SYSTEM", "", error);
+// }

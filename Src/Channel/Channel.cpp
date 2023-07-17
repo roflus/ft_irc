@@ -25,11 +25,11 @@ bool        Channel::getTopicIsForMod() { return this->_topicIsForMod; }
 int         Channel::getUserLimit() { return this->_userLimit; }
 size_t      Channel::getUsersCount() { return this->_users.size(); }
 
-void    Channel::sendMessageToUsers(std::string message, std::string nickname) {
+void    Channel::sendMessageToUsers(std::string message) {
     std::vector<Client *>::iterator it;
     Client *client;
     for(it = _users.begin(); it != _users.end(); it++) {
         client = *it;
-        client->setSendMessage(nickname, _name, message);
+        client->setMessage(message);
     }
 }

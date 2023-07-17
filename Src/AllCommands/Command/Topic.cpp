@@ -12,24 +12,20 @@ void  Topic::execute(Client &client) {
         return ;
     if (channel->isUserInChannel(client)) {
         if (client.getArguments().size() == 0) {
-            std::string &topic = channel->getTopic();
-            client.setSendMessage("SYSTEM", channelName, topic.c_str());
+            client.setMessage(RPL_TOPIC(channel->getName(), channel->getTopic()));
         } else {
             if (channel->getTopicIsForMod()) {
                 if (channel->isUserModerator(client)) {
                     channel->setTopic(client.getMessage(false));
                 } else {
-                    std::string message = "Topic can only be set by Moderators.\n";
-                    client.setSendMessage("SYSTEM", channelName, message);
+                    client.setMessage(ERR_CHANOPRIVSNEEDED(channel->getName()));
                     return ;
                 }
             } else
                 channel->setTopic(client.getMessage(false));
         }
-    } else {
-        client.setErrorMessage("You are not in the Channel\n");
-        return ;
-    }
+    } else
+        client.setMessage(ERR_NOTONCHANNEL(client.getUsername()));
 } 
 
     /*

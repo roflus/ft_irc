@@ -16,7 +16,8 @@
 # include "Client.hpp"
 # include "Channel.hpp"
 # include <exception>
-
+# include "Replies.hpp"
+# include "Errors.hpp"
 
 # define MAX_CLIENTS    10
 # define BUFFER_SIZE    1024
