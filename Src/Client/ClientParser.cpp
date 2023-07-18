@@ -71,7 +71,7 @@ bool    Client::sendAll() {
     return true;
 }
 
-void    Client::setMessage(std::string message) { _sendMessage.push_back(message); }
+void    Client::setMessage(std::string message) { _sendMessage.push_back(message + "\r\n"); }
 
 // void        Client::setSendMessage(const std::string &name, const std::string &channel, \
 //                                     const std::string &input){

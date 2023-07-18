@@ -88,7 +88,7 @@ void Server::runServer() {
             if ((_pollfds[i].revents & POLLIN))
                 HandleInput(*client);
 
-            if ((_pollfds[i].revents & POLLOUT) && client->checkSendMessage())
+            if ((_pollfds[i].revents & POLLOUT))
                 HandleOutput(*client, i);
 
         }

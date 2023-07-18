@@ -31,15 +31,15 @@ void  CheckCommands::enterServer(Client &client) {
     }
     else {
         message = ": " + client.getNickname() + " choose NICK USER PASS";
-        send(client.getSocket(), message.c_str(), message.size(), 0);
+        client.setMessage(message);
     }
     if (key == "PASS") {
         if (client.getPassword() != _server.getPassword()) {
             message = ERR_PASSWDMISMATCH(client.getNickname());
-            send(client.getSocket(), message.c_str(), message.size(), 0);
+            client.setMessage(message);
         }
         message = ": Password is set";
-        send(client.getSocket(), message.c_str(), message.size(), 0);
+        client.setMessage(message);
     }
     if (client.getNickname() != "" && client.getUsername() != "") {
         if (client.getPassword() == _server.getPassword()) {

@@ -13,12 +13,12 @@ void  User::execute(Client &client) {
     }
     if (username[0] == '#') {
         message = ERR_ERRONEUSNICKNAME(username);
-        send(client.getSocket(), message.c_str(), message.size(), 0);
+        client.setMessage(message);
         return ;
     }    
     if (username.empty()) {
         message = ERR_NEEDMOREPARAMS(std::string("USER"));
-        send(client.getSocket(), message.c_str(), message.size(), 0);
+        client.setMessage(message);
         return ;
     }
     // Client *checkClientname = _server.getClientUsername(username);
@@ -27,7 +27,7 @@ void  User::execute(Client &client) {
     //     if (!checkClientname) {
             client.setUsername(username);
             message = MSG_USER(username);
-            send(client.getSocket(), message.c_str(), message.size(), 0);
+            client.setMessage(message);
     //     }
     //     else {
     //         message = ERR_NICKNAMEINUSE(username);

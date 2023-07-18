@@ -12,7 +12,7 @@ void  Pass::execute(Client &client) {
         }
         else {
             std::string message = ERR_PASSWDMISMATCH(client.getUsername());
-            send(client.getSocket(), message.c_str(), message.size(), 0);
+            client.setMessage(message);
         }
         return ;
     }

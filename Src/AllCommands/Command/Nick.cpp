@@ -13,7 +13,7 @@ void  Nick::execute(Client &client) {
         }
         else {
             message = ERR_NONICKNAMEGIVEN(nickname);
-            send(client.getSocket(), message.c_str(), message.size(), 0);
+            client.setMessage(message);
         }
     return ;
     }
@@ -23,7 +23,7 @@ void  Nick::execute(Client &client) {
         }
         else {
             message = ERR_ERRONEUSNICKNAME(nickname);
-            send(client.getSocket(), message.c_str(), message.size(), 0);
+            client.setMessage(message);
         }
         return ;
     }
@@ -33,7 +33,7 @@ void  Nick::execute(Client &client) {
             client.setMessage(MSG_NICK(client.getNickname(), nickname));
         else {
             message = MSG_NICK(client.getNickname(), nickname);
-            send(client.getSocket(), message.c_str(), message.size(), 0);
+            client.setMessage(message);
         }
         client.setNickname(nickname);
     }
@@ -42,7 +42,7 @@ void  Nick::execute(Client &client) {
             client.setMessage(ERR_NICKNAMEINUSE(nickname));
         else {
             message = ERR_NICKNAMEINUSE(nickname);
-            send(client.getSocket(), message.c_str(), message.size(), 0);
+            client.setMessage(message);
         }
     }
 
