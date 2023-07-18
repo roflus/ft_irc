@@ -59,6 +59,18 @@ std::string Client::getSendMessage(){
     return (message);
 }
 
+bool    Client::sendAll() {
+    std::string message;
+    while (_sendMessage.size()) {
+        message = _sendMessage.front();
+        send(getSocket(), message.c_str(), message.length(), 0);
+        //error handling;
+        _sendMessage.pop_front();
+        message.erase();
+    }
+    return true;
+}
+
 void    Client::setMessage(std::string message) { _sendMessage.push_back(message); }
 
 // void        Client::setSendMessage(const std::string &name, const std::string &channel, \

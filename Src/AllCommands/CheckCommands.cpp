@@ -30,7 +30,7 @@ void  CheckCommands::enterServer(Client &client) {
         executeCommand(client, key);
     }
     else {
-        message = ": CHOOSE PASS, NICK, USER OR QUIT\n";
+        message = ": " + client.getNickname() + " choose NICK USER PASS";
         send(client.getSocket(), message.c_str(), message.size(), 0);
     }
     if (key == "PASS") {
@@ -38,6 +38,8 @@ void  CheckCommands::enterServer(Client &client) {
             message = ERR_PASSWDMISMATCH(client.getNickname());
             send(client.getSocket(), message.c_str(), message.size(), 0);
         }
+        message = ": Password is set";
+        send(client.getSocket(), message.c_str(), message.size(), 0);
     }
     if (client.getNickname() != "" && client.getUsername() != "") {
         if (client.getPassword() == _server.getPassword()) {

@@ -1,5 +1,5 @@
 #include "../../include/Server.hpp"
-
+#include <fcntl.h>
 Server::Server(const std::string &port, const std::string &password) : 
     _serverSocket(-1),
     _port(atoi(port.c_str())), 
@@ -39,6 +39,7 @@ void Server::startServer() {
     if (_serverSocket == -1)
         throw ServerException("Failed to create server socket");
 
+    fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
     // Set up server address
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = INADDR_ANY;
@@ -51,7 +52,6 @@ void Server::startServer() {
     // Listen for incoming connections
     if (listen(_serverSocket, 1) == -1)
         throw ServerException("Failed to listen server socket");
-
     std::cout << "Server started with port number: " << _port << ". Waiting for connections..." << std::endl;
 
     // Add server socket to the pollfd vector
@@ -71,22 +71,26 @@ void Server::runServer() {
             throw ServerException("Failed to listen server socket");
         //system("leaks ircserv");
         if (_pollfds[0].revents & POLLIN) {
+            _pollfds[0].revents = 0;
             std::cout << "New Client Connected" << std::endl;
             acceptClient();
         }
-        for (int i = 1; i <= _clients.size(); ++i) {
+        for (size_t i = 1; i < _pollfds.size(); i++) {
             client = GetClient(_pollfds[i].fd);
-            if (client->checkSendMessage() && client->getRegistrated() == true)
-                _pollfds[i].events |= POLLOUT;
+            // if (client->checkSendMessage() && client->getRegistrated() == true)
+            //     _pollfds[i].events |= POLLOUT;
 
-            if ((_pollfds[i]).revents & POLLHUP)
+            if ((_pollfds[i]).revents & POLLHUP) {
                 removeClient(client);
+                continue;
+            }
 
             if ((_pollfds[i].revents & POLLIN))
                 HandleInput(*client);
 
             if ((_pollfds[i].revents & POLLOUT) && client->checkSendMessage())
                 HandleOutput(*client, i);
+
         }
         ReviewPoll();
     }
@@ -112,11 +116,11 @@ void    Server::HandleInput(Client &client) {
 }
 
 void    Server::HandleOutput(Client &client, int i) {
-    std::string message = client.getSendMessage();
-    send(client.getSocket(), message.c_str(), message.length(), 0);
+    if(client.sendAll()) {
+        if (!client.checkSendMessage())
+            _pollfds[i].events &= ~POLLOUT;
+    }
     // Remove POLLOUT als geen messages
-    if (!client.checkSendMessage())
-        _pollfds[i].events &= ~POLLOUT;
 }
 
 void    Server::ReviewPoll() {
@@ -124,7 +128,7 @@ void    Server::ReviewPoll() {
     std::vector<pollfd>::iterator it = _pollfds.begin() + 1;
     while (it != _pollfds.end()) {
         client = GetClient(it->fd);
-        if (!client->checkSendMessage() && client->getRegistrated() == true)
+        if (client->checkSendMessage())
             it->events |= POLLOUT;
         ++it;
     }

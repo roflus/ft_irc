@@ -44,7 +44,7 @@ public:
 	std::string				        getKey();
     std::deque<std::string>         getArguments();
     std::string                     getMessage(bool newline);
-
+    bool                            sendAll();
     /* Setter methods */
     void                            setUsername(const std::string &username);
     void                            setPassword(const std::string &password);

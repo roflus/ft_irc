@@ -1,5 +1,5 @@
 #include "../../include/Server.hpp"
-
+  #include <fcntl.h>
 Client *Server::GetClient(int fd) {
     std::map<int, Client*>::iterator it = _clients.find(fd);
     if (it != _clients.end())
@@ -42,15 +42,18 @@ void Server::acceptClient() {
     client->setSocket(accept(_serverSocket, (sockaddr *)client->getSockaddr(), &clientAddressSize));
     if (client->getSocket() == -1)
         throw ServerException("Failed to listen server socket");
-
+    fcntl(client->getSocket(), F_SETFL, O_NONBLOCK);
+    std::cout << client->getSocket() << std::endl;
+    // Setnonblocking(client->getSocket());
     pollfd clientPollfd;
     clientPollfd.fd = client->getSocket();
-    clientPollfd.events = POLLIN;
+    clientPollfd.events = POLLIN | POLLHUP;
+    // clientPollfd.revents = 0;
     _pollfds.push_back(clientPollfd);
     
     _clients[client->getSocket()] = client;
-    std::string message = "001 Welcome! Give USERname and PASSword";
-    send(client->getSocket(), message.c_str(), message.size(), 0);
+    // std::string message = "001   Welcome! Give USERname and PASSword";
+    // send(client->getSocket(), message.c_str(), message.size(), 0);
 }
 
 void    Server::removeClient(Client *client) {
