@@ -104,6 +104,8 @@ void Server::receiveMessages(Client &client) {
     if (it != _clients.end())
         std::cout << "Received message from " << it->second->getNickname() \
             << std::endl << it->second->getBuffer() << std::endl;
+        // USERNAME CHECK> VERWIJDEREN ALS HET KLAAR IS      
+        std::cout << "Username: " << it->second->getUsername() << std::endl << std::endl;
 }
 
 void    Server::HandleInput(Client &client) {
