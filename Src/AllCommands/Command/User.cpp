@@ -21,13 +21,17 @@ void  User::execute(Client &client) {
         client.setMessage(message);
         return ;
     }
+    client.setUsername(username);
+    client.setMessage(MSG_USER(username));
+}
+
     // Client *checkClientname = _server.getClientUsername(username);
     // if (!checkClientname) {
     //     checkClientname = _server.getClientNickname(username);
     //     if (!checkClientname) {
-            client.setUsername(username);
-            message = MSG_USER(username);
-            client.setMessage(message);
+            //client.setUsername(username);
+            //message = MSG_USER(username);
+            //client.setMessage(message);
     //     }
     //     else {
     //         message = ERR_NICKNAMEINUSE(username);
@@ -38,4 +42,3 @@ void  User::execute(Client &client) {
     //     message = ERR_NICKNAMEINUSE(username);
     //     send(client.getSocket(), message.c_str(), message.size(), 0);    
     // }
-}

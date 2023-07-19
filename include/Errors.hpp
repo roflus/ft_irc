@@ -4,7 +4,7 @@
 /* Errors that will be returned that have something to do with nickname*/
 #define ERR_NOSUCHNICK(nickname) "401 " + nickname + " :No such nickname"
 #define ERR_NONICKNAMEGIVEN(nickname) "431 " + nickname + " :No nickname given"
-#define ERR_NICKNAMEINUSE(nickname) "433 " + nickname + " :Nickname is already in use"
+#define ERR_NICKNAMEINUSE(nickname) "433 " + nickname + " :Nickname/username is already in use"
 #define ERR_ERRONEUSNICKNAME(nickname) "432 " + nickname + " :Erroneus nickname"
 
 /* Errors that will be returned that have something to do with channel*/
