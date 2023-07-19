@@ -36,16 +36,3 @@ void Kick::execute(Client &client) {
     } else 
         client.setMessage(ERR_NOTONCHANNEL(targetChannel->getName()));
 }
-
-    /*
-        Takes 3 arguments, 1 optional
-        first argument is the channel
-        second is the user
-        third(optional) is the reason
-
-        check if this client is moderator
-        check first argument if channel
-        then check if second argument is a user
-        then if user is in that channel
-        if so remove from the user list/moderator list in channel
-    */

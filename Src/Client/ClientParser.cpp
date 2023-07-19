@@ -85,35 +85,3 @@ bool    Client::sendAll() {
 }
 
 void    Client::setMessage(std::string message) { _sendMessage.push_back(message + "\r\n"); }
-
-// void        Client::setSendMessage(const std::string &name, const std::string &channel, \
-//                                     const std::string &input){
-//     std::string message;
-//     if (channel == "")
-//         message = name + ": " + input;
-//     else
-//         message = "Channel: " + channel + " | " + name + \
-//                     ": " + input;
-//     _sendMessage.push_back(message);
-// }
-
-// void		Client::setErrorMessage(const std::string &error) {
-// 		setSendMessage("SYSTEM", "", error);
-// }
-
-//bool        Client::HandleBuffer() {
-//    char buffer[BUFFER_SIZE];
-//    setBuffer("");
-//    while (true) {
-//        memset(buffer, 0, sizeof(buffer));
-//        int bytesRead = recv(getSocket(), buffer, BUFFER_SIZE, 0);
-//        if (bytesRead <= 0)
-//            return false;
-//        buffer[bytesRead] = '\0';
-//        this->_buffer += buffer;
-//        if (this->_buffer.find("\r\n") == std::string::npos)
-//            break;
-//    }
-//    parseBuffer();
-//    return true;
-//}

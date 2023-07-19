@@ -27,19 +27,3 @@ void  Topic::execute(Client &client) {
     } else
         client.setMessage(ERR_NOTONCHANNEL(client.getUsername()));
 } 
-
-    /*
-        eerste argument is channel
-        de rest is topic
-
-        als er geen rest is dan vraag je topic op dus stuurt t naar deze client.
-
-
-        eerst checken of user in channel zit
-            2 argumenten
-                opvragen topic
-            meerdere 
-                als moderator is dan topic ceranderen
-                else can niet
-        else user is not in channel;
-    */

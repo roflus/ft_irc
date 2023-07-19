@@ -77,8 +77,6 @@ void Server::runServer() {
         }
         for (size_t i = 1; i < _pollfds.size(); i++) {
             client = GetClient(_pollfds[i].fd);
-            // if (client->checkSendMessage() && client->getRegistrated() == true)
-            //     _pollfds[i].events |= POLLOUT;
 
             if ((_pollfds[i]).revents & POLLHUP) {
                 removeClient(client);
@@ -142,29 +140,3 @@ void    Server::ReviewPoll() {
             it++;
     }
 }
-// void Server::disconnectClient(int index){
-//     int currentSocket = _pollfds[index].fd;
-//     // Client has closed the connection or an error occurred
-//     std::cout << "Client disconnected. Client socket descriptor: " << currentSocket << std::endl;
-//     close(currentSocket);
-//     // _pollfds[index].fd = -1; // Mark as unused
-//     // Find the client in the vector
-//     std::map<int, std::string>::iterator it;
-//     for (it = clientSockets.begin(); it != clientSockets.end(); ++it) {
-//         if (it->first == currentSocket) {
-//             break;
-
-//         }
-//     }
-//     if (it != clientSockets.end()) {
-//         clientSockets.erase(it);
-//     }
-//     std::cout << "connectedClients: " << connectedClients << std::endl;
-
-//     if (connectedClients == 0) {
-//         stopServer();
-//         // Iets anders voor vinden, maar ik had geen zin meer in dit
-//         exit (0);
-//     }
-// }
-

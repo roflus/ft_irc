@@ -52,8 +52,6 @@ void Server::acceptClient() {
     _pollfds.push_back(clientPollfd);
     
     _clients[client->getSocket()] = client;
-    // std::string message = "001   Welcome! Give USERname and PASSword";
-    // send(client->getSocket(), message.c_str(), message.size(), 0);
 }
 
 void    Server::removeClient(Client *client) {
@@ -73,10 +71,3 @@ void    Server::removeClient(Client *client) {
         it->second->removeUser(*client);
     }
 }
-    /*
-        Client uit de pollfd halen.
-        Client out lijst halen in server.
-        Door lijst channels heen gaan en checken voor de client.
-        zit client erin, remove client.
-    */
-

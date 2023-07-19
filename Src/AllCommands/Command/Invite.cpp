@@ -35,8 +35,3 @@ void  Invite::execute(Client &client) {
     } else 
         client.setMessage(ERR_CHANOPRIVSNEEDED(targetChannel->getName()));
 } 
-                /* 
-                    add to list of invited people?
-                    send message to user it is invited
-                    they us join to get into channel 
-                */
