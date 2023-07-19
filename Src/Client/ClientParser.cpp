@@ -40,6 +40,7 @@ bool        Client::HandleBuffer() {
     //buffer nog checken voor \r\n ??
     if (this->_buffer.find("\r\n") == std::string::npos) {
         int bytesRead = recv(getSocket(), buffer, BUFFER_SIZE, 0);
+        std::cout << "wtf: " << bytesRead << std::endl;
         if (bytesRead == -1 && errno == EAGAIN) {
             errno = 0;
             return false;

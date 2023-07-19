@@ -109,10 +109,11 @@ void Server::receiveMessages(Client &client) {
 void    Server::HandleInput(Client &client) {
     if (!client.HandleBuffer()) {
         removeClient(&client);
+        std::cout <<"kom je" << std::endl;
         return ;
     }
-    client.parseBuffer();
     receiveMessages(client);
+    client.parseBuffer();
     _checkCommands->findCommand(client);
 }
 
