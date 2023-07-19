@@ -6,6 +6,7 @@ User::~User() {}
 
 void  User::execute(Client &client) {
     std::string username = client.getKey();
+    std::string arguments;
     std::string message;
     if (client.getRegistrated()) {
         client.setMessage(ERR_ALREADYREGISTRED(client.getNickname()));
@@ -22,6 +23,17 @@ void  User::execute(Client &client) {
         return ;
     }
     client.setUsername(username);
+    arguments = client.getKey();
+    if (!arguments.empty()) {
+        client.setHostname(arguments);
+        arguments = client.getKey();
+        if (!arguments.empty()) {
+            client.setServername(arguments);
+            arguments = client.getKey();
+            if (!arguments.empty())
+                client.setRealname(arguments);
+        }
+    }
     client.setMessage(MSG_USER(username));
 }
 

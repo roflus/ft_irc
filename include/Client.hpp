@@ -14,6 +14,9 @@ class Client
 {
 private:
     std::string                     _username;
+    std::string                     _hostname;
+    std::string                     _servername;
+    std::string                     _realname;
     std::string                     _nickname;
     std::string                     _password;
     sockaddr_in                     _address;
@@ -47,6 +50,9 @@ public:
     bool                            sendAll();
     /* Setter methods */
     void                            setUsername(const std::string &username);
+    void                            setHostname(const std::string &hostname);
+    void                            setServername(const std::string &servername);
+    void                            setRealname(const std::string &realname);
     void                            setPassword(const std::string &password);
     void        					setNickname(const std::string &nickname);
     void        					setBuffer(const std::string &buffer);
