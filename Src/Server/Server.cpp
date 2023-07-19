@@ -111,6 +111,7 @@ void    Server::HandleInput(Client &client) {
         removeClient(&client);
         return ;
     }
+    client.parseBuffer();
     receiveMessages(client);
     _checkCommands->findCommand(client);
 }

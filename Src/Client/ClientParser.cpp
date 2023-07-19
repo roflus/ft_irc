@@ -23,26 +23,38 @@ std::string Client::getKey(){
 }
 
 void        Client::parseBuffer() {
-    std::istringstream stream(this->_buffer);
+    size_t pos = this->_buffer.find("\r\n");
+    std::string tempbuffer = this->_buffer.substr(0, pos);
+    std::istringstream stream(tempbuffer);
     std::string word;
     _arguments.clear();
     while (stream >> word)
         _arguments.push_back(word);
+    this->_buffer.erase(0, pos + 2);
 }
 
+/*  mee bezig*/
 bool        Client::HandleBuffer() {
     char buffer[BUFFER_SIZE];
 
     //buffer nog checken voor \r\n ??
-    setBuffer("");
-    memset(buffer, 0, sizeof(buffer));
-    int bytesRead = recv(getSocket(), buffer, BUFFER_SIZE, 0);
-    if (bytesRead <= 0)
-        return false;
-    buffer[bytesRead] = '\0';
-    this->_buffer += buffer;
-    parseBuffer();
-    return true;
+    if (this->_buffer.find("\r\n") == std::string::npos) {
+        int bytesRead = recv(getSocket(), buffer, BUFFER_SIZE, 0);
+        if (bytesRead == -1 && errno == EAGAIN) {
+            errno = 0;
+            return false;
+        }
+        if (bytesRead == -1)
+            // iets van expection ofzo of bij handlebuffer een error geven ofoz
+			//throw Networking::NetworkingException("receivePacket() -> Recv() failure and errno != EAGAIN");
+            // dit hebben zij ?
+        if (bytesRead == 0)
+			// throw Networking::NetworkingException("receivePacket() peer disconnected");
+
+        buffer[bytesRead] = '\0';
+        this->_buffer += buffer;
+    }
+    return this->_buffer.find("\r\n") != std::string::npos;
 }
 
 bool        Client::checkSendMessage() {
