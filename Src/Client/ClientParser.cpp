@@ -44,13 +44,14 @@ bool        Client::HandleBuffer() {
             errno = 0;
             return false;
         }
-        if (bytesRead == -1)
-            // iets van expection ofzo of bij handlebuffer een error geven ofoz
-			//throw Networking::NetworkingException("receivePacket() -> Recv() failure and errno != EAGAIN");
-            // dit hebben zij ?
-        if (bytesRead == 0)
-			// throw Networking::NetworkingException("receivePacket() peer disconnected");
-
+        if (bytesRead == -1) {
+            std::cout << "Error: Recv() failed and errno != EAGAIN" << std::endl;
+            return false;
+        }
+        if (bytesRead == 0) {
+            std::cout << "Error: client disconnected" << std::endl;
+            return false;
+        }
         buffer[bytesRead] = '\0';
         this->_buffer += buffer;
     }
