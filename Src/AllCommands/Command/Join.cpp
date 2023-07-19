@@ -7,6 +7,8 @@ Join::~Join() {}
 void  Join::execute(Client &client) {
     Channel *channel;
     std::string channelName(client.getKey());
+    std::string message;
+    std::string password;
     bool isNewChannel;
 
     if (channelName[0] != '#') {
@@ -25,15 +27,45 @@ void  Join::execute(Client &client) {
                 return ;
             }
         }
+        password = client.getKey();
         if (!channel->getInviteOnly()) {
-            channel->addUser(client);
-            if (isNewChannel)
+            if (isNewChannel) {
+                channel->addUser(client);
                 channel->addModerator(client);
+                if (!password.empty())
+                    channel->setPassword(password, true);
+            }
+            else {
+                if (channel->hasPassword() == false)
+                    channel->addUser(client);
+                else {
+                    if (password == channel->getPassword())
+                        channel->addUser(client);
+                    else {
+                        message = ERR_BADCHANNELKEY(channel->getName());
+                        client.setMessage(message);
+                        return ;
+                    }
+                }
+            }   
         }
         else {
             if (channel->isUserInvited(client)) {
-                channel->addUser(client);
-                channel->removeInvitedClient(client);
+                if (channel->hasPassword() == false) {
+                    channel->addUser(client);
+                    channel->removeInvitedClient(client);
+                }
+                else {
+                    if (password == channel->getPassword()) {
+                        channel->addUser(client);
+                        channel->removeInvitedClient(client);
+                    }
+                    else {
+                        message = ERR_BADCHANNELKEY(channel->getName());
+                        client.setMessage(message);
+                        return;
+                    }
+                }
             } else {
                 client.setMessage(ERR_INVITEONLYCHAN(channel->getName()));
                 return ;
@@ -55,3 +87,45 @@ void  Join::execute(Client &client) {
         Additionally, the server broadcasts a JOIN message to all users in the channel, 
         notifying them that a new user has joined. This message typically contains the nickname of the joining user.
     */
+
+
+
+//    Channel *channel;
+//    std::string channelName(client.getKey());
+//    bool isNewChannel;
+
+//    if (channelName[0] != '#') {
+//        client.setMessage(ERR_NOSUCHCHANNEL(channelName));
+//        return ;
+//    }
+//    channel = _server.getChannel(channelName);
+//    if (!channel) {
+//        isNewChannel = true;
+//        channel = _server.AddChannel(channelName);
+//    }
+//    if (!channel->isUserInChannel(client)) {
+//        if (channel->getUserLimit() > 0) {
+//            if (channel->getUserLimit() == channel->getUsersCount()) {
+//                client.setMessage(ERR_CHANNELISFULL(channel->getName()));
+//                return ;
+//            }
+//        }
+//        if (!channel->getInviteOnly()) {
+//            channel->addUser(client);
+//            if (isNewChannel)
+//                channel->addModerator(client);
+//        }
+//        else {
+//            if (channel->isUserInvited(client)) {
+//                channel->addUser(client);
+//                channel->removeInvitedClient(client);
+//            } else {
+//                client.setMessage(ERR_INVITEONLYCHAN(channel->getName()));
+//                return ;
+//            }
+//        }
+//        client.setMessage(MSG_JOIN(client.getNickname(), channel->getName()));
+//        channel->sendMessageToUsers(MSG_JOIN(client.getNickname(), channel->getName()));
+//    } else
+//        client.setMessage(ERR_USERONCHANNEL(client.getNickname(), channel->getName()));
+//}

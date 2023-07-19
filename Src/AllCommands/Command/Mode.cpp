@@ -12,7 +12,7 @@ static void addMode(Client &client, Channel &targetChannel, std::string flag, Se
     else if (flag[1] == 'k') {
         std::string password = client.getKey();
         if (!password.empty())
-            targetChannel.setPassword(password);
+            targetChannel.setPassword(password, true);
         else
             client.setMessage(ERR_PASSWDMISMATCH(client.getNickname()));
     }
@@ -45,7 +45,7 @@ static void removeMode(Client &client, Channel &targetChannel, std::string flag,
     else if (flag[1] == 't')
         targetChannel.setTopicIsForMod(false);
     else if (flag[1] == 'k') 
-        targetChannel.setPassword("");
+        targetChannel.setPassword("", false);
     else if (flag[1] == 'o') {
         std::string nickname = client.getKey();
         Client *targetClient = server.getClientNickname(nickname);
