@@ -68,6 +68,13 @@ public:
     void                            setSendMessage(const std::string &name, const std::string &channel, \
                                                     const std::string &input);
     void                            setErrorMessage(const std::string &error);
+
+    class ClientException: public std::exception {
+        private: const char* _message;
+        public:
+            ClientException(const char* message) : _message(message) {}
+            const char *what() const throw() { return _message; }
+    };
 };
 
 #endif

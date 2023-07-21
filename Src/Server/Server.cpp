@@ -105,14 +105,27 @@ void Server::receiveMessages(Client &client) {
 }
 
 void    Server::HandleInput(Client &client) {
-    if (!client.HandleBuffer()) {
-        removeClient(&client);
-        std::cout <<"kom je" << std::endl;
-        return ;
+    
+    try {
+        if (client.HandleBuffer() == false) {
+            std::cout << "jaopnieuw" << std::endl;      
+            return;
+        }
+        receiveMessages(client);
+        try {
+            client.parseBuffer();
+            _checkCommands->findCommand(client);
+        }
+        catch (const std::exception& e) {
+            std::cout << "Error" << e.what() << std::endl;
+            return ;
+        }
     }
-    receiveMessages(client);
-    client.parseBuffer();
-    _checkCommands->findCommand(client);
+    catch (const std::exception& e) {
+        std::cout << "Error" << e.what() << std::endl;
+        std::cout << "foutdoei" << std::endl;      
+        removeClient(&client);
+    }
 }
 
 void    Server::HandleOutput(Client &client, int i) {

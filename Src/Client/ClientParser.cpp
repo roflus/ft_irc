@@ -22,8 +22,10 @@ std::string Client::getKey(){
     return key;
 }
 
-void        Client::parseBuffer() {
+void       Client::parseBuffer() {
     size_t pos = this->_buffer.find("\r\n");
+    if (pos == std::string::npos)
+        throw ClientException("no \r\n in buffer");
     std::string tempbuffer = this->_buffer.substr(0, pos);
     std::istringstream stream(tempbuffer);
     std::string word;
@@ -33,29 +35,28 @@ void        Client::parseBuffer() {
     this->_buffer.erase(0, pos + 2);
 }
 
-/*  mee bezig*/
 bool        Client::HandleBuffer() {
     char buffer[BUFFER_SIZE];
 
     //buffer nog checken voor \r\n ??
     if (this->_buffer.find("\r\n") == std::string::npos) {
-        int bytesRead = recv(getSocket(), buffer, BUFFER_SIZE, 0);
+        int bytesRead = recv(getSocket(), buffer, BUFFER_SIZE - 1, 0);
         std::cout << "wtf: " << bytesRead << std::endl;
         if (bytesRead == -1 && errno == EAGAIN) {
             errno = 0;
             return false;
         }
-        if (bytesRead == -1) {
-            std::cout << "Error: Recv() failed and errno != EAGAIN" << std::endl;
-            return false;
-        }
-        if (bytesRead == 0) {
-            std::cout << "Error: client disconnected" << std::endl;
-            return false;
-        }
+        if (bytesRead == -1)
+            throw ClientException("Recv error, no Errno == EAGAIN");
+        if (bytesRead == 0)
+            throw ClientException("Error: client disconnected");
         buffer[bytesRead] = '\0';
         this->_buffer += buffer;
+        std::cout << "buffer -> " << buffer << std::endl;
+        std::cout << "this->buffer -> " << this->_buffer << std::endl;
     }
+    bool print = this->_buffer.find("\r\n") != std::string::npos;
+    std::cout << "return value: " << print << std::endl;
     return this->_buffer.find("\r\n") != std::string::npos;
 }
 
