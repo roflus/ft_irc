@@ -8,7 +8,7 @@
 #define MSG_MODE(user, channel, modes) ":" + user + " " + channel + " " + modes
 #define MSG_NICK(user, nickname) ":" + user + " Set nickname to :" + nickname
 #define MSG_USER(username) ":" + username + " :username is set" 
-#define MSG_PRIVMSG(user, target, message) ":" + user + " PRIVMSG " + target + " " + message
+#define MSG_PRIVMSG(user, target, message) ":" + user + " PRIVMSG " + target + " :" + message
 
 #define RPL_TOPIC(channel, topic) "332 " + channel + " :" + topic
 #define RPL_CHANNELMODEIS(user, channel, modes) "324 " + channel + modes
