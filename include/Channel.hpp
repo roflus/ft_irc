@@ -52,7 +52,8 @@ public:
     bool        getInviteOnly();
     bool        getTopicIsForMod();  
     int         getUserLimit();
-    size_t      getUsersCount();        
+    size_t      getUsersCount(); 
+    std::string getModes();       
 };
 
 #endif

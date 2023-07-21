@@ -11,6 +11,6 @@
 #define MSG_PRIVMSG(user, target, message) ":" + user + " PRIVMSG " + target + " :" + message
 
 #define RPL_TOPIC(channel, topic) "332 " + channel + " :" + topic
-#define RPL_CHANNELMODEIS(user, channel, modes) "324 " + channel + modes
+#define RPL_CHANNELMODEIS(user, channel, modes) "324 " + user + " " + channel + " " + modes
 #define RPL_INVITING(channel , target) "341 " + channel + target  // returned by server to indicat that the attempted invite message was successful.
 #endif

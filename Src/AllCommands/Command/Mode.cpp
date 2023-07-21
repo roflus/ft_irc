@@ -4,7 +4,7 @@ Mode::Mode(Server &server) : Commands(server) {}
 
 Mode::~Mode() {}
 
-static void addMode(Client &client, Channel &targetChannel, std::string flag, Server &server) {
+static bool addMode(Client &client, Channel &targetChannel, std::string flag, Server &server) {
     if (flag[1] == 'i')
         targetChannel.setInviteOnly(true);
     else if (flag[1] == 't')
@@ -13,8 +13,10 @@ static void addMode(Client &client, Channel &targetChannel, std::string flag, Se
         std::string password = client.getKey();
         if (!password.empty())
             targetChannel.setPassword(password, true);
-        else
+        else {
             client.setMessage(ERR_PASSWDMISMATCH(client.getNickname()));
+            return false;
+        }
     }
     else if (flag[1] == 'o') {
         std::string nickname = client.getKey();
@@ -23,23 +25,26 @@ static void addMode(Client &client, Channel &targetChannel, std::string flag, Se
             if (!targetChannel.isUserModerator(*targetClient))
                 targetChannel.addModerator(*targetClient);
         }
-        else
+        else {
             client.setMessage(ERR_NOSUCHNICK(nickname));
+            return false;
+        }
     }
     else if (flag[1] == 'l') {
         std::string limitString = client.getKey();
-        for (char c : limitString) {
-            if (!std::isdigit(c)) {
+        for (int i = 0; i < limitString.size(); i++) {
+            if (!std::isdigit(limitString[i])) {
                 client.setMessage(":" + client.getNickname() +  " :Argument for userlimit must be a number.");
-                return ;
+                return false;
             }
         }
         int limit = atoi(limitString.c_str());
         targetChannel.setUserLimit(limit);
     }
+    return true;
 }
 
-static void removeMode(Client &client, Channel &targetChannel, std::string flag, Server &server) {
+static bool removeMode(Client &client, Channel &targetChannel, std::string flag, Server &server) {
     if (flag[1] == 'i')
         targetChannel.setInviteOnly(false);
     else if (flag[1] == 't')
@@ -52,12 +57,15 @@ static void removeMode(Client &client, Channel &targetChannel, std::string flag,
         if (targetClient != NULL) {
             if (targetChannel.isUserModerator(*targetClient)) {
                 targetChannel.removeModerator(*targetClient);
-        } else
+        } else {
             client.setMessage(ERR_NOSUCHNICK(nickname));
+            return false;
+        }
     }
     else if (flag[1] == 'l')
         targetChannel.setUserLimit(0);
     }
+    return true;
 }
 
 void Mode::accessChannel(Client &client, std::string target) {
@@ -66,9 +74,11 @@ void Mode::accessChannel(Client &client, std::string target) {
     std::string flag(client.getKey());
     if (flag.size() == 2) {
         if (flag[0] == '+') {
-            addMode(client, *targetChannel, flag, _server);
+            if (addMode(client, *targetChannel, flag, _server))
+                client.setMessage(RPL_CHANNELMODEIS(client.getNickname(), targetChannel->getName(), targetChannel->getModes()));
         } else if (flag[0] == '-') {
-            removeMode(client, *targetChannel, flag, _server);
+            if (removeMode(client, *targetChannel, flag, _server))
+                client.setMessage(RPL_CHANNELMODEIS(client.getNickname(), targetChannel->getName(), targetChannel->getModes()));
         }
     } else
         client.setMessage(ERR_UNKNOWNMODE(flag));
@@ -80,7 +90,7 @@ void Mode::execute(Client &client) {
         Channel *targetChannel;
         targetChannel = _server.getChannel(target);
         if (!targetChannel) {
-            client.setMessage(ERR_NOSUCHCHANNEL(targetChannel->getName()));
+            client.setMessage(ERR_NOSUCHCHANNEL(target));
             return;
         }
         else if (targetChannel->isUserModerator(client))

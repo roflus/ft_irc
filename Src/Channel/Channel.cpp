@@ -40,3 +40,17 @@ void    Channel::sendMessageToUsers(std::string message) {
         client->setMessage(message);
     }
 }
+
+std::string Channel::getModes()
+{
+    std::string modes = "+n";
+    if (_inviteOnly)
+        modes += "i";
+    if (_topicIsForMod)
+        modes += "t";
+    if (_hasPassword)
+        modes += "k";
+    if (_userLimit)
+        modes += "l";
+    return modes;
+}
