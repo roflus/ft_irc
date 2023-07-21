@@ -17,7 +17,7 @@ void  Nick::execute(Client &client) {
     }
     Client *checkClientNickname = _server.getClientNickname(nickname);
     if (!checkClientNickname) {
-        client.setMessage(MSG_NICK(client.getNickname(), nickname));
+        // client.setMessage(MSG_NICK(client.getNickname(), nickname));
         client.setNickname(nickname);
     }
     else 

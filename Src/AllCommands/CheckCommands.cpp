@@ -25,26 +25,26 @@ Commands*   CheckCommands::getCommand(std::string &command) const {
 void  CheckCommands::enterServer(Client &client) {
     //Should make check for Pass | NICK Heeft nog een argument nodig
     std::string key = client.getKey();
-    std::string message;
+    // std::string message;
     if (key == "PASS" || key == "USER" || key == "NICK"){
         executeCommand(client, key);
     }
     else {
-        message = ": " + client.getNickname() + " choose NICK USER PASS";
-        client.setMessage(message);
+        // message = ": " + client.getNickname() + " choose NICK USER PASS";
+        // client.setMessage(message);
     }
     if (key == "PASS") {
         if (client.getPassword() != _server.getPassword()) {
-            message = ERR_PASSWDMISMATCH(client.getNickname());
-            client.setMessage(message);
+            // message = ERR_PASSWDMISMATCH(client.getNickname());
+            // client.setMessage(message);
         }
-        message = ": Password is set";
-        client.setMessage(message);
+        // message = ": Password is set";
+        // client.setMessage(message);
     }
     if (client.getNickname() != "" && client.getUsername() != "") {
         if (client.getPassword() == _server.getPassword()) {
             client.setRegistrated(true);
-            client.setMessage(MSG_WELCOME(client.getNickname()));
+            // client.setMessage(MSG_WELCOME(client.getNickname()));
         }
     }
     else if (key == "QUIT")

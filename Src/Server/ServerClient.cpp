@@ -38,11 +38,18 @@ void Server::acceptClient() {
     /* hier een nieuwe Client class aanmaken de socket naar accept zetten en dan in die map zetten */
     Client *client;
     client = new Client;
-    socklen_t clientAddressSize = sizeof(client->getSockaddr());
-    client->setSocket(accept(_serverSocket, (sockaddr *)client->getSockaddr(), &clientAddressSize));
-    if (client->getSocket() == -1)
-        throw ServerException("Failed to listen server socket");
-    fcntl(client->getSocket(), F_SETFL, O_NONBLOCK);
+    try {
+        socklen_t clientAddressSize = sizeof(client->getSockaddr());
+        client->setSocket(accept(_serverSocket, (sockaddr *)client->getSockaddr(), &clientAddressSize));
+        if (client->getSocket() == -1)
+            throw ServerException("Failed to listen server socket");
+        if (fcntl(client->getSocket(), F_SETFL, O_NONBLOCK) == -1)
+            throw ServerException("Failed to set non blocking");
+    }
+    catch (const std::exception &ex) {
+        delete client;
+        return;
+    }
     std::cout << client->getSocket() << std::endl;
     // Setnonblocking(client->getSocket());
     pollfd clientPollfd;
@@ -62,8 +69,10 @@ void    Server::removeClient(Client *client) {
             ++it;
     }
     for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end();) {
-        if (it->first == client->getSocket())
+        if (it->first == client->getSocket()) {
+            delete it->second;
             it = _clients.erase(it);
+        }
         else
             ++it;
     }

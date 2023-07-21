@@ -91,6 +91,7 @@ void Server::runServer() {
 
         }
         ReviewPoll();
+        system("leaks -quiet ircserv");
     }
     stopServer();
     return ;
@@ -113,8 +114,10 @@ void    Server::HandleInput(Client &client) {
         }
         receiveMessages(client);
         try {
-            client.parseBuffer();
-            _checkCommands->findCommand(client);
+            while (true){
+                client.parseBuffer();
+                _checkCommands->findCommand(client);
+            }
         }
         catch (const std::exception& e) {
             std::cout << "Error" << e.what() << std::endl;
@@ -130,7 +133,7 @@ void    Server::HandleInput(Client &client) {
 
 void    Server::HandleOutput(Client &client, int i) {
     if(client.sendAll()) {
-        if (!client.checkSendMessage())
+        if (client.checkSendMessage() == false)
             _pollfds[i].events &= ~POLLOUT;
     }
     // Remove POLLOUT als geen messages

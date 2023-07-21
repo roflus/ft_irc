@@ -9,6 +9,7 @@ std::string Client::getMessage(bool newline) {
     }
     if (newline == true)
         stringMessage += "\n";
+    _arguments.clear();
     return stringMessage;
 }
 
@@ -23,9 +24,10 @@ std::string Client::getKey(){
 }
 
 void       Client::parseBuffer() {
+    std::cout << "hier kom je " << std::endl;
     size_t pos = this->_buffer.find("\r\n");
     if (pos == std::string::npos)
-        throw ClientException("no \r\n in buffer");
+        throw ClientException("no CRLF in buffer");
     std::string tempbuffer = this->_buffer.substr(0, pos);
     std::istringstream stream(tempbuffer);
     std::string word;
@@ -75,6 +77,9 @@ std::string Client::getSendMessage(){
 
 bool    Client::sendAll() {
     std::string message;
+    std::cout << "address: " << &_sendMessage << std::endl;
+    std::cout << "address: " << &_sendMessage[0] << std::endl;
+
     while (_sendMessage.size()) {
         message = _sendMessage.front();
         send(getSocket(), message.c_str(), message.length(), 0);
