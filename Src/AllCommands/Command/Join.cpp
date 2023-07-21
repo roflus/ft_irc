@@ -71,7 +71,7 @@ void  Join::execute(Client &client) {
                 return ;
             }
         }
-        channel->sendMessageToUsers(MSG_JOIN(client.getNickname(), channel->getName()));
+        channel->sendMessageToUsers(MSG_JOIN(client.getNickname(), channel->getName()), false, client);
     } else
         client.setMessage(ERR_USERONCHANNEL(client.getNickname(), channel->getName()));
 }

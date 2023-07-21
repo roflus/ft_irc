@@ -32,12 +32,17 @@ size_t      Channel::getUsersCount() { return this->_users.size(); }
 std::string Channel::getPassword() { return this->_password; }
 bool        Channel::hasPassword() { return this->_hasPassword; }
 
-void    Channel::sendMessageToUsers(std::string message) {
+void    Channel::sendMessageToUsers(std::string message, bool skip, Client &skipClient) {
     std::vector<Client *>::iterator it;
     Client *client;
     for(it = _users.begin(); it != _users.end(); it++) {
         client = *it;
-        client->setMessage(message);
+        if (client->getNickname() == skipClient.getNickname()) {
+            if (!skip)
+                client->setMessage(message);
+        }    
+        else
+            client->setMessage(message);
     }
 }
 

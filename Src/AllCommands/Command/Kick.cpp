@@ -28,7 +28,7 @@ void Kick::execute(Client &client) {
                 std::string reason = client.getMessage(true);
                 std::string message;
                 targetClient->setMessage(MSG_KICK(client.getNickname(), targetClient->getNickname(), targetChannel->getName(), reason));
-                targetChannel->sendMessageToUsers(MSG_KICK(client.getNickname(), targetClient->getNickname(), targetChannel->getName(), reason));
+                targetChannel->sendMessageToUsers(MSG_KICK(client.getNickname(), targetClient->getNickname(), targetChannel->getName(), reason), false, client);
             } else 
                 client.setMessage(ERR_USERNOTINCHANNEL(targetClient->getNickname(), targetChannel->getName()));
         } else 

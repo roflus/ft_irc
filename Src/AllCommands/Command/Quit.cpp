@@ -5,6 +5,5 @@ Quit::Quit(Server& server) : Commands(server) {}
 Quit::~Quit() {}
 
 void  Quit::execute(Client &client) {
-    close(client.getSocket());
-    exit(0);
+    _server.removeClient(&client);
 } 
