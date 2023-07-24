@@ -34,5 +34,4 @@ void  User::execute(Client &client) {
                 client.setRealname(arguments);
         }
     }
-    // client.setMessage(MSG_USER(username));
 }

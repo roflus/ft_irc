@@ -12,10 +12,11 @@
 # include <poll.h>
 # include <map>
 # include <deque>
+# include <fcntl.h>
+# include <exception>
 # include "Commands.hpp"
 # include "Client.hpp"
 # include "Channel.hpp"
-# include <exception>
 # include "Replies.hpp"
 # include "Errors.hpp"
 
@@ -45,10 +46,10 @@ class Server {
 
         Client*                         getClientNickname(std::string nickname);
         Client*	                        getClientUsername(std::string username); 
-        void                            removeClient(Client *client);
-
         Client*                         GetClient(int fd);
+        void                            removeClient(Client *client);
         void                            AddClient(int fd);
+
 
         Channel*                        getChannel(std::string channelName);
         Channel*                        AddChannel(std::string channelName);

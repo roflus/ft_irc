@@ -6,8 +6,6 @@ Privmsg::~Privmsg() {}
 
 void    Privmsg::messageClient(Client &client, std::string &target) {
     Client *targetClient = _server.getClientNickname(target);
-    std::cout << "this is target: " << target << std::endl;
-    std::cout << targetClient << std::endl;
     if (targetClient != NULL) {
         std::string message = client.getMessage(true);
         if (message.empty())

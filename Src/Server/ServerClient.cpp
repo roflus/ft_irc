@@ -1,15 +1,12 @@
 #include "../../include/Server.hpp"
-  #include <fcntl.h>
+
 Client *Server::GetClient(int fd) {
     std::map<int, Client*>::iterator it = _clients.find(fd);
     if (it != _clients.end())
         return it->second;
-    else
-        throw ServerException("Client not found");
 }
 
 Client*	Server::getClientNickname(std::string nickname) {
-    // MISSING ERROR CHECKS
     std::map<int, Client*>::iterator it;
 	it = this->_clients.begin();
 	while (it != this->_clients.end())
@@ -22,7 +19,6 @@ Client*	Server::getClientNickname(std::string nickname) {
 }
 
 Client*	Server::getClientUsername(std::string username) {
-    // MISSING ERROR CHECKS
     std::map<int, Client*>::iterator it;
 	it = this->_clients.begin();
 	while (it != this->_clients.end())
@@ -35,7 +31,6 @@ Client*	Server::getClientUsername(std::string username) {
 }
 
 void Server::acceptClient() {
-    /* hier een nieuwe Client class aanmaken de socket naar accept zetten en dan in die map zetten */
     Client *client;
     client = new Client;
     try {
@@ -43,22 +38,21 @@ void Server::acceptClient() {
         client->setSocket(accept(_serverSocket, (sockaddr *)client->getSockaddr(), &clientAddressSize));
         if (client->getSocket() == -1)
             throw ServerException("Failed to listen server socket");
-        if (fcntl(client->getSocket(), F_SETFL, O_NONBLOCK) == -1)
+        if (fcntl(client->getSocket(), F_SETFL, O_NONBLOCK) == -1) {
+            close(client->getSocket());
             throw ServerException("Failed to set non blocking");
+        }
     }
     catch (const std::exception &ex) {
         delete client;
         return;
     }
-    std::cout << client->getSocket() << std::endl;
-    // Setnonblocking(client->getSocket());
     pollfd clientPollfd;
     clientPollfd.fd = client->getSocket();
     clientPollfd.events = POLLIN | POLLHUP;
-    // clientPollfd.revents = 0;
+    clientPollfd.revents = 0;
     _pollfds.push_back(clientPollfd);
-    
-    _clients[client->getSocket()] = client;
+    _clients[clientPollfd.fd] = client;
 }
 
 void    Server::removeClient(Client *client) {

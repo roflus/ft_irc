@@ -24,7 +24,6 @@ std::string Client::getKey(){
 }
 
 void       Client::parseBuffer() {
-    std::cout << "hier kom je " << std::endl;
     size_t pos = this->_buffer.find("\r\n");
     if (pos == std::string::npos)
         throw ClientException("no CRLF in buffer");
@@ -40,10 +39,8 @@ void       Client::parseBuffer() {
 bool        Client::HandleBuffer() {
     char buffer[BUFFER_SIZE];
 
-    //buffer nog checken voor \r\n ??
     if (this->_buffer.find("\r\n") == std::string::npos) {
         int bytesRead = recv(getSocket(), buffer, BUFFER_SIZE - 1, 0);
-        std::cout << "wtf: " << bytesRead << std::endl;
         if (bytesRead == -1 && errno == EAGAIN) {
             errno = 0;
             return false;
@@ -54,11 +51,7 @@ bool        Client::HandleBuffer() {
             throw ClientException("Error: client disconnected");
         buffer[bytesRead] = '\0';
         this->_buffer += buffer;
-        std::cout << "buffer -> " << buffer << std::endl;
-        std::cout << "this->buffer -> " << this->_buffer << std::endl;
     }
-    bool print = this->_buffer.find("\r\n") != std::string::npos;
-    std::cout << "return value: " << print << std::endl;
     return this->_buffer.find("\r\n") != std::string::npos;
 }
 
@@ -77,13 +70,16 @@ std::string Client::getSendMessage(){
 
 bool    Client::sendAll() {
     std::string message;
-    std::cout << "address: " << &_sendMessage << std::endl;
-    std::cout << "address: " << &_sendMessage[0] << std::endl;
-
+    size_t bytesSend;
     while (_sendMessage.size()) {
         message = _sendMessage.front();
-        send(getSocket(), message.c_str(), message.length(), 0);
-        //error handling;
+        bytesSend = send(getSocket(), message.c_str(), message.length(), 0);
+        if (bytesSend == -1 && errno == EAGAIN) {
+            errno = 0;
+            return ;
+        }
+        if (bytesSend == -1)
+            throw ClientException("send failed and no errno == EAGAIN");
         _sendMessage.pop_front();
         message.erase();
     }

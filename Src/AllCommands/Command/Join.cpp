@@ -7,7 +7,6 @@ Join::~Join() {}
 void  Join::execute(Client &client) {
     Channel *channel;
     std::string channelName(client.getKey());
-    std::string message;
     std::string password;
     bool isNewChannel;
 
@@ -42,8 +41,7 @@ void  Join::execute(Client &client) {
                     if (password == channel->getPassword())
                         channel->addUser(client);
                     else {
-                        message = ERR_BADCHANNELKEY(channel->getName());
-                        client.setMessage(message);
+                        client.setMessage(ERR_BADCHANNELKEY(channel->getName()));
                         return ;
                     }
                 }
@@ -61,8 +59,7 @@ void  Join::execute(Client &client) {
                         channel->removeInvitedClient(client);
                     }
                     else {
-                        message = ERR_BADCHANNELKEY(channel->getName());
-                        client.setMessage(message);
+                        client.setMessage(ERR_BADCHANNELKEY(channel->getName()));
                         return;
                     }
                 }

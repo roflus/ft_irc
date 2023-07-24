@@ -34,27 +34,22 @@ void Server::stopServer() {
 void Server::startServer() {
     struct sockaddr_in serverAddress, clientAddress;
 
-    /* Create serversocket en throw exception en dan in de main opvangen met try en chatch want */
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (_serverSocket == -1)
         throw ServerException("Failed to create server socket");
+    if (fcntl(_serverSocket, F_SETFL, O_NONBLOCK) == -1)
+        throw ServerException("Failed to set nonblocking");
 
-    fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
-    // Set up server address
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = INADDR_ANY;
     serverAddress.sin_port = htons(_port);
-
-    // Bind server socket to the specified address and port
     if (bind(_serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) == -1)
         throw ServerException("Failed to bind server socket");
 
-    // Listen for incoming connections
     if (listen(_serverSocket, 1) == -1)
         throw ServerException("Failed to listen server socket");
     std::cout << "Server started with port number: " << _port << ". Waiting for connections..." << std::endl;
 
-    // Add server socket to the pollfd vector
     pollfd serverPollfd;
     serverPollfd.fd = _serverSocket;
     serverPollfd.events = POLLIN;
@@ -66,10 +61,8 @@ void Server::startServer() {
 void Server::runServer() {
     Client *client;
     while (true) {
-        // Use poll to wait for activity on any of the connected sockets
         if (poll(_pollfds.data(), _pollfds.size(), -1) == -1)
             throw ServerException("Failed to listen server socket");
-        //system("leaks ircserv");
         if (_pollfds[0].revents & POLLIN) {
             _pollfds[0].revents = 0;
             std::cout << "New Client Connected" << std::endl;
@@ -98,7 +91,6 @@ void Server::runServer() {
 }
 
 void Server::receiveMessages(Client &client) {
-    // Check for activity on the client sockets (incoming data)
     std::map<int, Client*>::iterator it = _clients.find(client.getSocket());
     if (it != _clients.end())
         std::cout << "Received message from " << it->second->getNickname() \
@@ -109,7 +101,6 @@ void    Server::HandleInput(Client &client) {
     
     try {
         if (client.HandleBuffer() == false) {
-            std::cout << "jaopnieuw" << std::endl;      
             return;
         }
         receiveMessages(client);
@@ -125,18 +116,22 @@ void    Server::HandleInput(Client &client) {
         }
     }
     catch (const std::exception& e) {
-        std::cout << "Error" << e.what() << std::endl;
-        std::cout << "foutdoei" << std::endl;      
+        std::cout << "Error" << e.what() << std::endl;      
         removeClient(&client);
     }
 }
 
 void    Server::HandleOutput(Client &client, int i) {
-    if(client.sendAll()) {
-        if (client.checkSendMessage() == false)
-            _pollfds[i].events &= ~POLLOUT;
+    try{
+        if(client.sendAll()) {
+            if (client.checkSendMessage() == false)
+                _pollfds[i].events &= ~POLLOUT;
+        }
     }
-    // Remove POLLOUT als geen messages
+    catch (const std::exception& e) {
+        std::cout << "Error" << e.what() << std::endl;
+        removeClient(&client);
+    }
 }
 
 void    Server::ReviewPoll() {

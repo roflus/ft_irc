@@ -1,7 +1,7 @@
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#include "iostream"
+#include <iostream>
 #include <vector>
 #include <deque>
 #include "Client.hpp"
@@ -32,7 +32,6 @@ public:
     void        addModerator(Client &client);
     void        removeModerator(Client &Client);
     void        removeUser(Client &client);
-    void        changeModerator(Client &client, Client &targetClient);
     void        addInvitedClient(Client &client);
     void        removeInvitedClient(Client &client);
 
