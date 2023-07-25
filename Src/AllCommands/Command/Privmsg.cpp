@@ -31,7 +31,7 @@ void   Privmsg::messageChannel(Client &client, std::string &target) {
         else
             targetChannel->sendMessageToUsers(MSG_PRIVMSG(client.getNickname(), target, message), true, client);
     } else 
-        client.setMessage(ERR_USERONCHANNEL(client.getNickname(), target));
+        client.setMessage(ERR_NOTONCHANNEL(targetChannel->getName()));
 }
 
 void    Privmsg::execute(Client &client) {

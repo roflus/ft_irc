@@ -93,6 +93,10 @@ void Mode::execute(Client &client) {
             client.setMessage(ERR_NOSUCHCHANNEL(target));
             return;
         }
+        if (!targetChannel->isUserInChannel(client)){
+            client.setMessage(ERR_NOTONCHANNEL(targetChannel->getName()));
+            return;
+        }
         if (targetChannel->isUserModerator(client))
             accessChannel(client, target);
         else

@@ -4,7 +4,7 @@
 #define MSG_WELCOME(user)   "001 " + user + " Welcome to our irc server"
 #define MSG_INVITING(user, target, channel) ":" + user + " INVITED " + target + " to channel :" + channel
 #define MSG_JOIN(user, channel)  ":" + user + " JOIN :" + channel
-#define MSG_KICK(user, target, channel, reason) ":" + user + " KICKED :" + target + "from :" + channel + " " + reason
+#define MSG_KICK(user, target, channel, reason) ":" + user + " KICKED :" + target + " from :" + channel + " " + reason
 #define MSG_MODE(user, channel, modes) ":" + user + " " + channel + " " + modes
 #define MSG_NICK(user, nickname) ":" + user + " Set nickname to :" + nickname
 #define MSG_USER(username) ":" + username + " :username is set" 

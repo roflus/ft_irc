@@ -84,7 +84,6 @@ void Server::runServer() {
 
         }
         ReviewPoll();
-        system("leaks -quiet ircserv");
     }
     stopServer();
     return ;

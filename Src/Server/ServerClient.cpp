@@ -4,6 +4,7 @@ Client *Server::GetClient(int fd) {
     std::map<int, Client*>::iterator it = _clients.find(fd);
     if (it != _clients.end())
         return it->second;
+    return NULL;
 }
 
 Client*	Server::getClientNickname(std::string nickname) {
