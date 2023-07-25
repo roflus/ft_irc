@@ -28,8 +28,6 @@ class CheckCommands;
 class Server {
 
     private:
-        /* Map met clientsocket fd als key en User class als value */
-        /* Map met alle Channels als value met de naam als key*/
         std::map<int, Client*>          _clients;
         std::map<std::string, Channel*> _channels;
         std::vector<pollfd>             _pollfds;
@@ -48,37 +46,28 @@ class Server {
         Client*	                        getClientUsername(std::string username); 
         Client*                         GetClient(int fd);
         void                            removeClient(Client *client);
-        void                            AddClient(int fd);
-
 
         Channel*                        getChannel(std::string channelName);
         Channel*                        AddChannel(std::string channelName);
         void                            RemoveChannel(std::string channelName);
 
         std::string                     getPassword();
-        bool                            CheckPassword();
 
-        in_port_t                       GetPort();
-
-        bool                            HandleData(Client &client);
         void                            HandleInput(Client &client);
         void                            HandleOutput(Client &client, int i);
         void                            ReviewPoll();
-
-        /* custom exeption maybe toch wel een namespace gebruiken dan kun je deze exception overal gebruiken*/
-        class ServerException: public std::exception {
-            private: const char* _message;
-            public:
-                ServerException(const char* message) : _message(message) {}
-                const char *what() const throw() { return _message; }
-        };
 
         void                            startServer();
         void                            stopServer();
         void                            runServer();
         void                            acceptClient();
         void                            receiveMessages(Client &client);
-        void                            disconnectClient(int index);
 
+        class ServerException: public std::exception {
+            private: const char* _message;
+            public:
+                ServerException(const char* message) : _message(message) {}
+                const char *what() const throw() { return _message; }
+        };
 };
 #endif

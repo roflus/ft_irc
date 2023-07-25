@@ -22,16 +22,18 @@ void  Invite::execute(Client &client) {
         return ;
     }
     if (targetChannel->isUserModerator(client)) {
+        if (targetChannel->isUserInChannel(*targetClient)) {
+            client.setMessage(ERR_USERONCHANNEL(targetClient->getNickname(), targetChannel->getName()));
+            return;
+        }
         if (targetChannel->getUserLimit() > 0) {
             if (targetChannel->getUserLimit() == targetChannel->getUsersCount()) {
                 client.setMessage(ERR_CHANNELISFULL(targetChannel->getName()));
                 return ;
             }
         }
-        if (!targetChannel->isUserInChannel(*targetClient)) {
-            targetChannel->addInvitedClient(*targetClient);
-            targetClient->setMessage(MSG_INVITING(client.getNickname(), targetClient->getNickname(), targetChannel->getName()));
-        }
+        targetChannel->addInvitedClient(*targetClient);
+        targetClient->setMessage(MSG_INVITING(client.getNickname(), targetClient->getNickname(), targetChannel->getName()));
     } else 
         client.setMessage(ERR_CHANOPRIVSNEEDED(targetChannel->getName()));
 } 

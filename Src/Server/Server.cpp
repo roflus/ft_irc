@@ -111,8 +111,7 @@ void    Server::HandleInput(Client &client) {
             }
         }
         catch (const std::exception& e) {
-            std::cout << "Error" << e.what() << std::endl;
-            return ;
+            // return ;
         }
     }
     catch (const std::exception& e) {

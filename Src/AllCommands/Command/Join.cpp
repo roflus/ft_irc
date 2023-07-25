@@ -8,7 +8,7 @@ void  Join::execute(Client &client) {
     Channel *channel;
     std::string channelName(client.getKey());
     std::string password;
-    bool isNewChannel;
+    bool isNewChannel = false;
 
     if (channelName[0] != '#') {
         client.setMessage(ERR_NOSUCHCHANNEL(channelName));

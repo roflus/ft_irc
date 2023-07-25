@@ -42,7 +42,7 @@ public:
     bool                            getRegistrated();
     bool                            getIsModerator();
     std::string 			        getBuffer();
-    sockaddr_in 			        *getSockaddr();
+    sockaddr_in* 			        getSockaddr();
     int                             getSocket();
 	std::string				        getKey();
     std::deque<std::string>         getArguments();
@@ -65,9 +65,6 @@ public:
 
     bool                            checkSendMessage();
     std::string                     getSendMessage();
-    void                            setSendMessage(const std::string &name, const std::string &channel, \
-                                                    const std::string &input);
-    void                            setErrorMessage(const std::string &error);
 
     class ClientException: public std::exception {
         private: const char* _message;

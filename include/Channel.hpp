@@ -27,8 +27,8 @@ public:
     bool        isUserInChannel(Client &client);
     bool        isUserModerator(Client &client);
     bool        isUserInvited(Client &client);
-
     void        addUser(Client &client);
+
     void        addModerator(Client &client);
     void        removeModerator(Client &Client);
     void        removeUser(Client &client);

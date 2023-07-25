@@ -93,7 +93,7 @@ void Mode::execute(Client &client) {
             client.setMessage(ERR_NOSUCHCHANNEL(target));
             return;
         }
-        else if (targetChannel->isUserModerator(client))
+        if (targetChannel->isUserModerator(client))
             accessChannel(client, target);
         else
             client.setMessage(ERR_CHANOPRIVSNEEDED(targetChannel->getName()));

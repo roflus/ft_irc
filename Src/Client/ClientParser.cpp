@@ -76,7 +76,7 @@ bool    Client::sendAll() {
         bytesSend = send(getSocket(), message.c_str(), message.length(), 0);
         if (bytesSend == -1 && errno == EAGAIN) {
             errno = 0;
-            return ;
+            return false;
         }
         if (bytesSend == -1)
             throw ClientException("send failed and no errno == EAGAIN");

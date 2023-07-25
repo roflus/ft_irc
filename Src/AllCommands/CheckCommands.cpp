@@ -44,7 +44,7 @@ void  CheckCommands::enterServer(Client &client) {
     if (client.getNickname() != "" && client.getUsername() != "") {
         if (client.getPassword() == _server.getPassword()) {
             client.setRegistrated(true);
-            // client.setMessage(MSG_WELCOME(client.getNickname()));
+            client.setMessage(MSG_WELCOME(client.getNickname()));
         }
     }
     else if (key == "QUIT")
