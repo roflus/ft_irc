@@ -16,6 +16,8 @@ void    Channel::addUser(Client &client) {
 
 void Channel::removeUser(Client& client) {
     if (isUserInChannel(client)) {
+        if (isUserModerator(client))
+            removeModerator(client);
         std::vector<Client*>::iterator it;
         for (it = _users.begin(); it != _users.end(); ) {
             if (*it == &client) {

@@ -64,7 +64,6 @@ static bool removeMode(Client &client, Channel &targetChannel, std::string flag,
     }
     else if (flag[1] == 'l')
         targetChannel.setUserLimit(0);
-    }
     return true;
 }
 

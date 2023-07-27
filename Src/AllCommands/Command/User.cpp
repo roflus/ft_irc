@@ -31,4 +31,6 @@ void  User::execute(Client &client) {
                 client.setRealname(arguments);
         }
     }
+    if (client.getPassword() != _server.getPassword())
+        client.setMessage(ERR_PASSWDMISMATCH(client.getUsername()));
 }
