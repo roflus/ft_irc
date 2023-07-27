@@ -7,19 +7,16 @@ User::~User() {}
 void  User::execute(Client &client) {
     std::string username = client.getKey();
     std::string arguments;
-    std::string message;
     if (client.getRegistrated()) {
         client.setMessage(ERR_ALREADYREGISTRED(client.getNickname()));
         return ;
     }
     if (username[0] == '#') {
-        message = ERR_ERRONEUSNICKNAME(username);
-        client.setMessage(message);
+        client.setMessage(ERR_ERRONEUSNICKNAME(username));
         return ;
     }    
     if (username.empty()) {
-        message = ERR_NEEDMOREPARAMS(std::string("USER"));
-        client.setMessage(message);
+        client.setMessage(ERR_NEEDMOREPARAMS(std::string("USER")));
         return ;
     }
     client.setUsername(username);

@@ -69,6 +69,7 @@ void  Join::execute(Client &client) {
             }
         }
         channel->sendMessageToUsers(MSG_JOIN(client.getNickname(), channel->getName()), false, client);
+        client.setMessage(RPL_TOPIC(client.getNickname(), channel->getName(), channel->getTopic()));
     } else
         client.setMessage(ERR_USERONCHANNEL(client.getNickname(), channel->getName()));
 }

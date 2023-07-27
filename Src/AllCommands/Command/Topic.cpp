@@ -8,8 +8,10 @@ void  Topic::execute(Client &client) {
     std::string channelName(client.getKey());
     Channel *channel;
     channel = _server.getChannel(channelName);
-    if (!channel)
+    if (!channel) {
+        client.setMessage(ERR_NOSUCHCHANNEL(channelName));
         return ;
+    }
     if (channel->isUserInChannel(client)) {
         if (client.getArguments().size() == 0) {
             client.setMessage(RPL_TOPIC(client.getNickname(), channel->getName(), channel->getTopic()));
