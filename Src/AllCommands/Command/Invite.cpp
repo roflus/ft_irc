@@ -34,6 +34,7 @@ void  Invite::execute(Client &client) {
         }
         targetChannel->addInvitedClient(*targetClient);
         targetClient->setMessage(MSG_INVITING(client.getNickname(), targetClient->getNickname(), targetChannel->getName()));
+        client.setMessage(RPL_INVITING(client.getNickname(), targetClient->getNickname(), targetChannel->getName()));
     } else 
         client.setMessage(ERR_CHANOPRIVSNEEDED(targetChannel->getName()));
 } 
