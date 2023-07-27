@@ -12,7 +12,7 @@ void  Topic::execute(Client &client) {
         return ;
     if (channel->isUserInChannel(client)) {
         if (client.getArguments().size() == 0) {
-            client.setMessage(RPL_TOPIC(channel->getName(), channel->getTopic()));
+            client.setMessage(RPL_TOPIC(client.getNickname(), channel->getName(), channel->getTopic()));
         } else {
             if (channel->getTopicIsForMod()) {
                 if (channel->isUserModerator(client)) {
