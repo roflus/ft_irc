@@ -7,11 +7,8 @@ Privmsg::~Privmsg() {}
 void    Privmsg::messageClient(Client &client, std::string &target) {
     Client *targetClient = _server.getClientNickname(target);
     if (targetClient != NULL) {
-        std::string message = client.getMessage(true);
-        if (message.empty())
-            client.setMessage(ERR_NOTEXTTOSEND(targetClient->getNickname()));
-        else
-            targetClient->setMessage(MSG_PRIVMSG(client.getNickname(), target, message));
+        std::string message = client.getMessage(false);
+        targetClient->setMessage(MSG_PRIVMSG(client.getNickname(), target, message));
     }
     else
         client.setMessage(ERR_NOSUCHNICK(target));
@@ -25,11 +22,8 @@ void   Privmsg::messageChannel(Client &client, std::string &target) {
         return;
     }
     if (targetChannel->isUserInChannel(client)) {
-        std::string message = client.getMessage(true);
-        if (message.empty())
-            client.setMessage(ERR_NOTEXTTOSEND(targetChannel->getName()));
-        else
-            targetChannel->sendMessageToUsers(MSG_PRIVMSG(client.getNickname(), target, message), true, client);
+        std::string message = client.getMessage(false);
+        targetChannel->sendMessageToUsers(MSG_PRIVMSG(client.getNickname(), target, message), true, client);
     } else 
         client.setMessage(ERR_NOTONCHANNEL(targetChannel->getName()));
 }

@@ -27,7 +27,7 @@ void Kick::execute(Client &client) {
                 if (targetChannel->isUserModerator(*targetClient))
                     targetChannel->removeModerator(*targetClient);
                 targetChannel->removeUser(*targetClient);
-                std::string reason = client.getMessage(true);
+                std::string reason = client.getMessage(false);
                 targetClient->setMessage(MSG_KICK(client.getNickname(), targetClient->getNickname(), targetChannel->getName(), reason));
                 targetChannel->sendMessageToUsers(MSG_KICK(client.getNickname(), targetClient->getNickname(), targetChannel->getName(), reason), false, client);
             } else 

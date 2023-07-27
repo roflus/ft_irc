@@ -41,6 +41,10 @@ static bool addMode(Client &client, Channel &targetChannel, std::string flag, Se
         int limit = atoi(limitString.c_str());
         targetChannel.setUserLimit(limit);
     }
+    else {
+        client.setMessage(ERR_UNKNOWNMODE(flag));
+        return false;
+    }
     return true;
 }
 
@@ -64,6 +68,10 @@ static bool removeMode(Client &client, Channel &targetChannel, std::string flag,
     }
     else if (flag[1] == 'l')
         targetChannel.setUserLimit(0);
+    else {
+        client.setMessage(ERR_UNKNOWNMODE(flag));
+        return false;
+    }
     return true;
 }
 

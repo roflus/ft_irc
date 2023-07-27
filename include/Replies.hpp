@@ -10,6 +10,6 @@
 
 #define RPL_TOPIC(user, channel, topic) "332 " + user + " " + channel + " :" + topic
 #define RPL_CHANNELMODEIS(user, channel, modes) "324 " + user + " " + channel + " " + modes
-#define RPL_INVITING(user, target, channel) "341 " + user + " " + target + " " + channel// returned by server to indicat that the attempted invite message was successful.
+#define RPL_INVITING(user, target, channel) "341 " + user + " " + target + " " + channel
 
 #endif
