@@ -33,9 +33,4 @@
 /* Erorrs that will be returned that have something to do with commands with operator privileges*/
 #define ERR_CHANOPRIVSNEEDED(channel) "482 " + channel + " :You're not channel operator"
 
-/*  deze mischien weet ik niet?  */
-#define ERR_UMODEUNKNOWNFLAG(user) "501 " + user + " :Unknown MODE flag"
-#define ERR_NORECIPIENT(command) "411 " + ":No recipient given " + command
-#define ERR_NOTEXTTOSEND(target) "412 " + target + ":No text to send"
-
 #endif 
