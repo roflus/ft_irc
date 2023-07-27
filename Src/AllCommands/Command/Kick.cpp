@@ -19,12 +19,14 @@ void Kick::execute(Client &client) {
         client.setMessage(ERR_NOSUCHNICK(clientName));
         return;
     }
+    if (targetClient->getNickname() == client.getNickname())
+        return ;
     if (targetChannel->isUserInChannel(client)) {
         if (targetChannel->isUserModerator(client)) {
             if (targetChannel->isUserInChannel(*targetClient)) {
-                targetChannel->removeUser(*targetClient);
                 if (targetChannel->isUserModerator(*targetClient))
                     targetChannel->removeModerator(*targetClient);
+                targetChannel->removeUser(*targetClient);
                 std::string reason = client.getMessage(true);
                 targetClient->setMessage(MSG_KICK(client.getNickname(), targetClient->getNickname(), targetChannel->getName(), reason));
                 targetChannel->sendMessageToUsers(MSG_KICK(client.getNickname(), targetClient->getNickname(), targetChannel->getName(), reason), false, client);
