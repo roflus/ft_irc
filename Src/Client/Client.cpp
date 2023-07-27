@@ -13,7 +13,9 @@ Client::Client()
       _message("")
 {}
 
-Client::~Client() {}
+Client::~Client() {
+  close(this->_clientSocket);
+}
 
 /* Getters*/
 std::string					Client::getUsername() { return this->_username; }
