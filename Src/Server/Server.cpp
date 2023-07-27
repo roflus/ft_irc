@@ -61,7 +61,7 @@ void Server::startServer() {
 void Server::runServer() {
     Client *client;
     while (true) {
-        if (poll(_pollfds.data(), _pollfds.size(), -1) == -1)
+        if (poll(_pollfds.data(), _pollfds.size(), 0) == -1)
             throw ServerException("Failed to listen server socket");
         if (_pollfds[0].revents & POLLIN) {
             _pollfds[0].revents = 0;

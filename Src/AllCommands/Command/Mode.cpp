@@ -55,7 +55,7 @@ static bool removeMode(Client &client, Channel &targetChannel, std::string flag,
         std::string nickname = client.getKey();
         Client *targetClient = server.getClientNickname(nickname);
         if (targetClient != NULL) {
-            if (targetChannel.isUserModerator(*targetClient)) {
+            if (targetChannel.isUserModerator(*targetClient))
                 targetChannel.removeModerator(*targetClient);
         } else {
             client.setMessage(ERR_NOSUCHNICK(nickname));
