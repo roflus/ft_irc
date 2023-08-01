@@ -34,7 +34,7 @@ static bool addMode(Client &client, Channel &targetChannel, std::string flag, Se
         std::string limitString = client.getKey();
         for (size_t i = 0; i < limitString.size(); i++) {
             if (!std::isdigit(limitString[i])) {
-                client.setMessage(":" + client.getNickname() +  " :Argument for userlimit must be a number.");
+                client.setMessage(ERR_UNKNOWNMODE(limitString));
                 return false;
             }
         }

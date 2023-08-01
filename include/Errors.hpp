@@ -23,7 +23,7 @@
 #define ERR_NEEDMOREPARAMS(key) "461 " + key + " :Not enough parameters"
 
 /* Erorrs that will be returned that have something to do with command JOIN*/
-#define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join channel (+l)"
+#define ERR_CHANNELISFULL(channel) "471 " + channel + " :Cannot join/invite channel (+l)"
 #define ERR_INVITEONLYCHAN(channel) "473 " + channel + " :Cannot join/invite channel (+i)"
 #define ERR_BADCHANNELKEY(channel) "475 " + channel + " :Cannot join channel (+k)"
 

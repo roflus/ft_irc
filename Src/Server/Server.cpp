@@ -24,7 +24,6 @@ void Server::stopServer() {
         _serverSocket = -1;
     }
 
-    // Close all client sockets
     for (std::vector<pollfd>::iterator it =_pollfds.begin(); it != _pollfds.end(); ++it) {
         if (it->fd >= 0)
             close(it->fd);
