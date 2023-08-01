@@ -5,8 +5,8 @@ Channel::Channel(std::string name)
     :   _name(name),
         _topic("No topic"),
         _password(""),
-        _topicIsForMod(true),
         _inviteOnly(false),
+        _topicIsForMod(true),
         _hasPassword(false),
         _userLimit(0)
 {}
@@ -27,7 +27,7 @@ std::string&    Channel::getTopic() { return _topic; }
 std::string     Channel::getName() { return this->_name; }
 bool            Channel::getInviteOnly() { return this->_inviteOnly; }
 bool            Channel::getTopicIsForMod() { return this->_topicIsForMod; }
-int             Channel::getUserLimit() { return this->_userLimit; }
+size_t          Channel::getUserLimit() { return this->_userLimit; }
 size_t          Channel::getUsersCount() { return this->_users.size(); }
 std::string     Channel::getPassword() { return this->_password; }
 bool            Channel::hasPassword() { return this->_hasPassword; }

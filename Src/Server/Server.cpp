@@ -32,7 +32,7 @@ void Server::stopServer() {
 }
 
 void Server::startServer() {
-    struct sockaddr_in serverAddress, clientAddress;
+    struct sockaddr_in serverAddress;
 
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (_serverSocket == -1)

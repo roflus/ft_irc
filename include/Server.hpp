@@ -29,9 +29,9 @@ class Server {
         std::map<std::string, Channel*> _channels;
         std::vector<pollfd>             _pollfds;
 
+        int                             _serverSocket;
         const in_port_t                 _port;
         const std::string               _password;
-        int                             _serverSocket;
 
         CheckCommands*                  _checkCommands;
 

@@ -1,41 +1,33 @@
-NAME = ircserv
-FLAGS = -Wall -Wextra -Werror -std=c++98
-HEADER = -I ./include
-SRC = 	./Src/Main.cpp \
-		./Src/Server/Server.cpp \
-		./Src/Server/ServerClient.cpp \
-		./Src/Server/ServerChannel.cpp \
-		./Src/Client/Client.cpp \
-		./Src/Client/ClientParser.cpp \
-		./Src/Channel/Channel.cpp \
-		./Src/Channel/ChannelUser.cpp \
-		./Src/Channel/ChannelMod.cpp \
-		./Src/AllCommands/Commands.cpp \
-		./Src/AllCommands/CheckCommands.cpp \
-		./Src/AllCommands/Command/Invite.cpp \
-		./Src/AllCommands/Command/Join.cpp \
-		./Src/AllCommands/Command/Kick.cpp \
-		./Src/AllCommands/Command/Mode.cpp \
-		./Src/AllCommands/Command/Nick.cpp \
-		./Src/AllCommands/Command/Pass.cpp \
-		./Src/AllCommands/Command/Privmsg.cpp \
-		./Src/AllCommands/Command/Quit.cpp \
-		./Src/AllCommands/Command/Topic.cpp \
-		./Src/AllCommands/Command/User.cpp 
+TARGET	:= ircserv
+CC		:= c++
+CFLAGS	:= -std=c++98 -Werror -Wall -Wextra
 
-OBJ = $(SRC:%.cpp=%.o)
+INC		:= -I include
+SRC_DIR	:= src
+OBJ_DIR	:= obj
 
-all: $(NAME)
-$(NAME): $(OBJ)
-	c++ $(OBJ) -o $(NAME)
+SRCS	:= $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/*/*.cpp) $(wildcard $(SRC_DIR)/*/*/*.cpp)
+OBJS	:= $(subst src, obj, $(SRCS:.cpp=.o))
 
-%.o: %.cpp %.hpp
-	c++ $(HEADER) -c $< -o $@
+
+all: dirs $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) -o $@ $^ $(INC) $(CFLAGS)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CC) -o $@ $< -c $(INC) $(CFLAGS)
+
+dirs:
+	mkdir -p obj
+	find src -type d -exec bash -c "echo '{}' | cut -c 5- | xargs -I {} mkdir -p obj/{}" \;
 
 clean:
-	rm -rf $(OBJ)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -f $(TARGET)
 
 re: fclean all
+
+.PHONY: all clean fclean re dirs

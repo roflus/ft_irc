@@ -5,16 +5,16 @@ Invite::Invite(Server& server) : Commands(server) {}
 Invite::~Invite() {}
 
 void  Invite::execute(Client &client) {
-    std::string channelName = client.getKey();
-    Channel *targetChannel = _server.getChannel(channelName);
-    if (!targetChannel) {
-        client.setMessage(ERR_NOSUCHCHANNEL(channelName));
-        return ;
-    }
     std::string clientName = client.getKey();
     Client *targetClient = _server.getClientNickname(clientName);
     if (!targetClient) {
         client.setMessage(ERR_NOSUCHNICK(clientName));
+        return ;
+    }
+    std::string channelName = client.getKey();
+    Channel *targetChannel = _server.getChannel(channelName);
+    if (!targetChannel) {
+        client.setMessage(ERR_NOSUCHCHANNEL(channelName));
         return ;
     }
     if (!targetChannel->isUserInChannel(client)) {

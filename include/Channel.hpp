@@ -15,7 +15,7 @@ private:
     bool                    _inviteOnly;
     bool                    _topicIsForMod;
     bool                    _hasPassword;
-    int                     _userLimit;
+    size_t                  _userLimit;
     std::vector<Client *>   _users;
     std::vector<Client *>   _moderators;
     std::vector<Client *>   _invitedClients;
@@ -50,7 +50,7 @@ public:
     bool        hasPassword();
     bool        getInviteOnly();
     bool        getTopicIsForMod();  
-    int         getUserLimit();
+    size_t      getUserLimit();
     size_t      getUsersCount(); 
     std::string getModes();       
 };

@@ -70,7 +70,7 @@ std::string Client::getSendMessage(){
 
 bool    Client::sendAll() {
     std::string message;
-    size_t bytesSend;
+    ssize_t bytesSend;
     while (_sendMessage.size()) {
         message = _sendMessage.front();
         bytesSend = send(getSocket(), message.c_str(), message.length(), 0);
